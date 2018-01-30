@@ -4,6 +4,8 @@ from sqlalchemy import Column, Date, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
 
+import hashlib
+
 engine = create_engine('mysql://jd:jd2018@67.205.168.129/junior_design', echo=True)
 Base = declarative_base()
 
@@ -21,11 +23,21 @@ class User(Base):
     token = Column(String(32)) # also arbitrary but we should limit it later!
 
     #----------------------------------------------------------------------
-    def __init__(self, name, email, password):
+    def __init__(self, name, email, password, salt):
         """"""
         self.username = name
-        self.password = password
+        self.password = sha256(password + "+" + salt)
         self.email = email
+        self.salt = salt
+
+    def sha256(raw):
+        return hashlib.sha256(raw).hexdigest()
+
+    def generateSalt():
+        return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(8))
+
+    def checkPassword(rawPassword, salt):
+        return sha256(rawPassword + "+" + salt) == self.password
 
 # create tables
 # Base.metadata.create_all(engine)
