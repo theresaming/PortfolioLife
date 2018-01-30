@@ -3,10 +3,9 @@ from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy import Column, Date, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
+from app import db
+import hashlib, random, string
 
-import hashlib
-
-engine = create_engine('mysql://jd:jd2018@67.205.168.129/junior_design', echo=True)
 Base = declarative_base()
 
 ########################################################################
@@ -30,14 +29,21 @@ class User(Base):
         self.email = email
         self.salt = salt
 
-    def sha256(raw):
-        return hashlib.sha256(raw).hexdigest()
-
-    def generateSalt():
-        return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(8))
-
-    def checkPassword(rawPassword, salt):
+    def checkPassword(self, rawPassword, salt):
         return sha256(rawPassword + "+" + salt) == self.password
+
+def sha256(raw):
+    return hashlib.sha256(raw).hexdigest()
+
+def generateSalt():
+    return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(8))
+
+
+
+def registerUser(user):
+    db.session.add(user)
+    db.session.commit()
+
 
 # create tables
 # Base.metadata.create_all(engine)

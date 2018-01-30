@@ -2,10 +2,15 @@ from flask import Flask
 from flask import Flask, flash, redirect, render_template, request, session, abort
 import os
 from sqlalchemy.orm import sessionmaker
-from sqldb  import *
+from flask_sqlalchemy import SQLAlchemy 
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://jd:jd2018@67.205.168.129/junior_design'
+db = SQLAlchemy(app)
+
+from sqldb  import *
 
 app.config['OAUTH_CREDENTIALS'] = {
     'facebook': {
