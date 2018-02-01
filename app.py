@@ -9,6 +9,11 @@ from wtforms import Form, BooleanField, StringField, PasswordField, validators
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
 
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://jd:jd2018@67.205.168.129/junior_design'
+db = SQLAlchemy(app)
+
+from sqldb  import *
+
 app.config['OAUTH_CREDENTIALS'] = {
     'facebook': {
         'id': '1987111774844195',
