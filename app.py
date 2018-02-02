@@ -3,8 +3,6 @@ from flask import Flask, flash, redirect, render_template, request, session, abo
 import os
 from sqlalchemy.orm import sessionmaker
 from sqldb  import *
-from wtforms import Form, BooleanField, StringField, PasswordField, validators
-
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
@@ -92,18 +90,7 @@ class FacebookSignIn(OAuthSignIn):
         )
 
 class GoogleSignIn(OAuthSignIn):
-    pass #TODO: GOOGLE OAUTH
-
-class RegistrationForm(Form):
-    username = StringField('Username', [validators.Length(min=4, max=25)])
-    email = StringField('Email Address', [validators.Length(min=6, max=35)])
-    password = PasswordField('New Password', [
-        validators.DataRequired(),
-        validators.EqualTo('confirm', message='Passwords must match')
-    ])
-    confirm = PasswordField('Repeat Password')
-    accept_tos = BooleanField('I accept the TOS', [validators.DataRequired()])
-
+    pass
 
 @app.route('/')
 def home():
@@ -126,19 +113,6 @@ def do_admin_login():
     else:
         flash('wrong password!')
     return home()
-
-@app.route('/registration', methods=['GET', 'POST'])
-def register():
-    form = RegistrationForm(request.form)
-    if request.method == 'POST':
-        Session = sessionmaker(bind=engine)
-        session = Session()
-        user = User(form.username.data, form.password.data)
-        session.add(user)
-        session.commit()
-        flash('Thanks for registering')
-        return render_template('login.html')
-    return render_template('registration.html', form=form)
 
 @app.route('/authorize/facebook')
 def oauth_authorize(provider):

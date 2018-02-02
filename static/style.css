@@ -1,19 +1,16 @@
-html, body {
-	text-align: center;
-}
-/* * {
+* {
 box-sizing: border-box;
 }
 
 *:focus {
 	outline: none;
 }
-/* body {
+body {
 font-family: Arial;
-background-color: #FFF;
+background-color: #3498DB;
 padding: 50px;
-} */
-/* .login {
+}
+.login {
 margin: 20px auto;
 width: 300px;
 }
@@ -21,9 +18,9 @@ width: 300px;
 background-color: #FFF;
 padding: 20px;
 border-radius: 5px
-} */
+}
 
-/* .app-title {
+.app-title {
 text-align: center;
 color: #777;
 }
@@ -78,4 +75,4 @@ box-shadow: none;
   color: #444;
   display: block;
 	margin-top: 12px;
-} */ */
+}

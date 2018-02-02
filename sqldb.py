@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship, backref
 from app import db
 import hashlib, random, string
 
-engine = create_engine('sqlite:///userdb.db', echo=True)
+engine = create_engine('sqlite:///tutorial.db', echo=True)
 Base = declarative_base()
 
 ########################################################################
