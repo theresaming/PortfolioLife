@@ -1,3 +1,6 @@
 {
-    "sqlURL": "67.205.168.129"
+    "sqlURL": "67.205.168.129",
+    "tableName": "jd_test",
+    "username": "jd",
+    "password": "jd2018"
 }

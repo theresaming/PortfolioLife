@@ -4,10 +4,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
 type conf struct {
-	SQLURL string `json:"sqlURL"`
+	SQLURL    string `json:"sqlURL"`
+	TableName string `json:"tableName"`
+	Username  string `json:"username"`
+	Password  string `json:"password"`
 }
 
 var config conf
