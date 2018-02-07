@@ -66,6 +66,12 @@ var apiRoutes = routes{
 		HandlerFunc: registrationHandler,
 	},
 	route{
+		Method:      "POST",
+		Pattern:     "/user/logout",
+		Validation:  true,
+		HandlerFunc: logoutHandler,
+	},
+	route{
 		Method:      "GET",
 		Pattern:     "/user/test",
 		Validation:  true,
