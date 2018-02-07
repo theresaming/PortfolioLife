@@ -52,6 +52,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Unprotected POST
 func registrationHandler(w http.ResponseWriter, r *http.Request) {
 	type registration struct {
 		Name     string `json:"name"`
@@ -96,6 +97,30 @@ func registrationHandler(w http.ResponseWriter, r *http.Request) {
 	sessionMap[token] = session{
 		user: user,
 	}
+	data, err := json.Marshal(resp)
+	if err != nil {
+		panic(err)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(data)
+}
+
+// Protected
+func logoutHandler(w http.ResponseWriter, r *http.Request) {
+	auth := r.Header.Get("token")
+
+	s, ok := sessionMap[auth]
+	if !ok {
+		writeError(&w, "you are already logged out!", 403)
+		return
+	}
+	delete(sessionMap, auth)
+	logoutUser(s.user)
+	resp := jsonResponse{
+		Success: true,
+		Message: "you have successfully logged out",
+	}
+
 	data, err := json.Marshal(resp)
 	if err != nil {
 		panic(err)

@@ -41,6 +41,18 @@ func emailExists(email string) bool {
 	return len(u.Email) != 0
 }
 
+func logoutUser(user *User) {
+	db, err := openConnection()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	db.Model(user).Where("email = ?", user.Email).Update("token", "")
+	user.Token = ""
+
+}
+
 func registerUser(user *User) (token string, err error) {
 	db, err := openConnection()
 	if err != nil {
