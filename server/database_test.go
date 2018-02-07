@@ -95,14 +95,14 @@ func init() {
 	}
 }
 
-func wrapDbTest(test func(db *gorm.DB)) {
+func wrapDbTest(fn func(db *gorm.DB)) {
 	db, err := openTestConnection()
 	if err != nil {
 		panic(err)
 	}
 	db.LogMode(true)
 	defer db.Close()
-	test(db)
+	fn(db)
 }
 
 func openTestConnection() (*gorm.DB, error) {

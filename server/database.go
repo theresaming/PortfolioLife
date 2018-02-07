@@ -1,3 +1,5 @@
+// This contains mostly definitions useful for database functions. For more meat,
+// checkout database_functions.go
 package main
 
 import (
@@ -12,9 +14,9 @@ type User struct {
 	CreatedAt time.Time
 	ID        uint `gorm:"primary_key;AUTO_INCREMENT;size:11"` // default primary key but for clarity
 	Name      string
-	Email     string
+	Email     string `gorm:"unique"`
 	Password  string
-	Salt      string
+	Salt      string `gorm:"type:varchar(10)"`
 	Oauth     int    `gorm:"size:11"`
 	Token     string `gorm:"type:varchar(32)"`
 
@@ -83,6 +85,15 @@ type PictureShare struct {
 	PictureID    uint `gorm:"primary_key;size:11"`
 	ShareSetting int
 	Hash         string `gorm:"type:varchar(256);UNIQUE"`
+}
+
+func wrapDb(fn func(db *gorm.DB)) {
+	db, err := openConnection()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	fn(db)
 }
 
 func openConnection() (*gorm.DB, error) {

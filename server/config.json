@@ -2,5 +2,7 @@
     "sqlURL": "67.205.168.129",
     "tableName": "jd_test",
     "username": "jd",
-    "password": "jd2018"
+    "password": "jd2018",
+
+    "port": 8080
 }
