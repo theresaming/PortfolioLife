@@ -1,4 +1,5 @@
 .vscode/*
 .DS_store
-server
-server.exe
+server/server
+server/server.exe
+server/run-server.sh
