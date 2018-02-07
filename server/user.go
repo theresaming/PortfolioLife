@@ -1,3 +1,5 @@
+// HTTP handlers for User tasks, such as login, registration, and logout
+
 package main
 
 import (

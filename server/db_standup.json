@@ -6,7 +6,7 @@
             "password": "edecb5ee7a66ba1d72742714716c27976cde529e99fd8ceaf1dd730b2e4df945",
             "salt": "josh",
             "oauth": 0,
-            "token": ""
+            "token": null
         },
         {
             "name": "Theresa Ming",
@@ -14,7 +14,7 @@
             "password": "658ed346eab90207ecd2949245e5ecbdb0010b8712ac14ed4cdfd6658396fd3b",
             "salt": "theresa",
             "oauth": 0,
-            "token": ""
+            "token": null
         },
         {
             "name": "Paul Hamill",
@@ -22,7 +22,7 @@
             "password": "fb424a178835ee238beecce1447c45b43c041ac8b1243e78412e4df35d9ed51d",
             "salt": "paul",
             "oauth": 0,
-            "token": ""
+            "token": null
         },
         {
             "name": "Melissa Essue",
@@ -30,7 +30,7 @@
             "password": "499d737003c2fa3b25199c66426b05dda7e6f4b02603fa06361f405b7eeff309",
             "salt": "melissa",
             "oauth": 0,
-            "token": ""
+            "token": null
         },
         {
             "name": "Nelson Taylor",
@@ -38,7 +38,7 @@
             "password": "6fe366e43117810fadf6c4cb6d4e03172eeb2df7cbcc4372f9fe240b7dc02d8b",
             "salt": "nelson",
             "oauth": 0,
-            "token": ""
+            "token": null
         }
     ],
     "pictures": [
@@ -56,6 +56,11 @@
             "userID": 3,
             "path": "https://i.imgur.com/nyJQh1q.png",
             "mask": "mask3"
+        },
+        {
+            "userID": 3,
+            "path": "/users/3/buzz.png",
+            "mask": "mask3v2"
         },
         {
             "userID": 4,

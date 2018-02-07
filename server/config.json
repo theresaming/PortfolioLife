@@ -6,6 +6,7 @@
 
     "s3Endpoint": "nyc3.digitaloceanspaces.com",
     "s3SpaceName": "portfoliolife",
+    "s3Location": "nyc3",
     
     "port": 8080
 }

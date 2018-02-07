@@ -53,6 +53,7 @@ func initServer() {
 }
 
 var apiRoutes = routes{
+	// User routes
 	route{
 		Method:      "POST",
 		Pattern:     "/user/login",
@@ -76,6 +77,20 @@ var apiRoutes = routes{
 		Pattern:     "/user/test",
 		Validation:  true,
 		HandlerFunc: validateUserLoggedIn,
+	},
+
+	// Picture routes
+	route{
+		Method:      "POST",
+		Pattern:     "/picture/upload",
+		Validation:  true,
+		HandlerFunc: pictureUploadHandler,
+	},
+	route{
+		Method:      "GET",
+		Pattern:     "/picture/{pictureID}",
+		Validation:  true,
+		HandlerFunc: pictureRetrievalHandler,
 	},
 }
 

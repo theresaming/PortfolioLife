@@ -42,3 +42,24 @@ func TestPassHash(t *testing.T) {
 	fmt.Printf("%s+%s\n", "paul", salt)
 	fmt.Printf("%s\n", hash("paul", salt))
 }
+
+func TestPictureSet(t *testing.T) {
+	u, _ := getUserFromEmail("paul@paul.com")
+	picture := &Picture{
+		ImagePath: "/users/3/buzz.png",
+		Mask:      "a",
+	}
+	u.Pictures = append(u.Pictures, *picture)
+	saveUser(u)
+}
+
+func TestGetPicture(t *testing.T) {
+	u, _ := getUserFromEmail("paul@paul.com")
+	mask := "mask3v2"
+
+	pic, err := getPicture(u, mask)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(pic.ValidURL)
+}
