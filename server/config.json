@@ -4,5 +4,8 @@
     "username": "jd",
     "password": "jd2018",
 
+    "s3Endpoint": "nyc3.digitaloceanspaces.com",
+    "s3SpaceName": "portfoliolife",
+    
     "port": 8080
 }
