@@ -78,6 +78,12 @@ var apiRoutes = routes{
 		Validation:  true,
 		HandlerFunc: validateUserLoggedIn,
 	},
+	route{
+		Method:      "GET",
+		Pattern:     "/user/pictures",
+		Validation:  true,
+		HandlerFunc: getUsersPicturesHandler,
+	},
 
 	// Picture routes
 	route{

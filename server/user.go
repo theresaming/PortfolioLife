@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 )
 
 // Unprotected POST
@@ -121,6 +122,77 @@ func logoutHandler(w http.ResponseWriter, r *http.Request) {
 	resp := jsonResponse{
 		Success: true,
 		Message: "you have successfully logged out",
+	}
+
+	data, err := json.Marshal(resp)
+	if err != nil {
+		panic(err)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(data)
+}
+
+// Protected GET
+func getUsersPicturesHandler(w http.ResponseWriter, r *http.Request) {
+	auth := r.Header.Get("token")
+
+	_, ok := sessionMap[auth]
+	if !ok {
+		writeError(&w, "invalid session, please reload your page", 403)
+		return
+	}
+	const (
+		maxPhotosPerPage = 30
+	)
+	var (
+		count   int
+		page    = 1
+		maxPage int
+	)
+
+	pageStr := r.URL.Query().Get("page")
+	if len(pageStr) != 0 {
+		if p, err := strconv.Atoi(pageStr); err != nil {
+			page = 1
+		} else {
+			page = p
+		}
+	}
+
+	type paginatedPicture struct {
+		Mask string `json:"pictureID"`
+		URL  string `json:"url"`
+	}
+
+	/*maxPage = (len(userPictures) / maxPhotosPerPage) + 1
+	if page > maxPage {
+		page = maxPage
+	}
+	fmt.Println("user photos: ", len(userPictures))
+
+	if page == maxPage {
+		count = len(userPictures) % maxPhotosPerPage
+	}
+
+	userPictures := getUsersPicturesAndRefreshURL(s.user, count, page)*/
+
+	// TODO: Make this a LOT better!!!
+	paginated := make([]paginatedPicture, count)
+
+	resp := struct {
+		*jsonResponse
+		Pictures []paginatedPicture `json:"pictures"`
+		Count    int                `json:"count"`
+		Page     int                `json:"page"`
+		MaxPage  int                `json:"maxPage"`
+	}{
+		&jsonResponse{
+			Success: true,
+		},
+		paginated,
+		count,
+		page,
+		maxPage,
 	}
 
 	data, err := json.Marshal(resp)

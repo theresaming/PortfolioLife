@@ -68,3 +68,15 @@ func TestDeletePicture(t *testing.T) {
 	mask := "Z16WB5jVTAMmGrwUAVF7PlXA4ZaQIHAb"
 	deletePicture(mask)
 }
+
+func TestGetPicturesFromUser(t *testing.T) {
+	testUser := &User{
+		ID: 3,
+	}
+	pictures := getUsersPicturesAndRefreshURL(testUser, 30, 1)
+	fmt.Println(len(pictures))
+}
+
+func init() {
+	verboseDatabase = true
+}

@@ -167,6 +167,21 @@ func deletePicture(pictureMask string) {
 	db.Exec("DELETE FROM pictures WHERE mask = ?", pictureMask)
 }
 
+func getUsersPicturesAndRefreshURL(user *User, limit int, page int) []Picture {
+	db, err := openConnection()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	var (
+		pictures = make([]Picture, 0)
+	)
+	db.Limit(limit).Offset((page-1)*limit).Where("user_id = ?", user.ID).Find(&pictures)
+	// if len(pictures) == 0, try getting the final picture_size % limit
+
+	return pictures
+}
+
 /****************
 *				*
 * Miscellaneous *

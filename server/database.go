@@ -10,6 +10,10 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+var (
+	verboseDatabase = false
+)
+
 // A User is a client of our service
 type User struct {
 	CreatedAt time.Time
@@ -104,7 +108,11 @@ func wrapDb(fn func(db *gorm.DB)) {
 }
 
 func openConnection() (*gorm.DB, error) {
-	return gorm.Open("mysql",
+	db, err := gorm.Open("mysql",
 		fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
 			config.Username, config.Password, config.SQLURL, config.TableName))
+	if err == nil {
+		db.LogMode(verboseDatabase)
+	}
+	return db, err
 }
