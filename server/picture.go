@@ -187,7 +187,7 @@ func uploadToS3(fileName string, s *session) (string, string, error) {
 	defer f.Close()
 	buf := make([]byte, 512)
 	_, err = f.Read(buf)
-	if err != nil {
+	if err != nil && err != io.EOF {
 		return "", "", err
 	}
 	contentType := http.DetectContentType(buf)
