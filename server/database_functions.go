@@ -118,7 +118,7 @@ func saveUser(user *User) {
 
 /********************
 *					*
-* picture functions *
+* Picture functions *
 *					*
 ********************/
 
@@ -156,6 +156,22 @@ func getPicture(user *User, pictureMask string) (*Picture, error) {
 
 	return &picture, nil
 }
+
+func deletePicture(pictureMask string) {
+	db, err := openConnection()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	db.Exec("DELETE FROM pictures WHERE mask = ?", pictureMask)
+}
+
+/****************
+*				*
+* Miscellaneous *
+*				*
+****************/
 
 func generateRandomBytes(n int) ([]byte, error) {
 	b := make([]byte, n)

@@ -63,3 +63,8 @@ func TestGetPicture(t *testing.T) {
 	}
 	fmt.Println(pic.ValidURL)
 }
+
+func TestDeletePicture(t *testing.T) {
+	mask := "Z16WB5jVTAMmGrwUAVF7PlXA4ZaQIHAb"
+	deletePicture(mask)
+}

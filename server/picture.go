@@ -30,7 +30,7 @@ func pictureUploadHandler(w http.ResponseWriter, r *http.Request) {
 
 	s, ok := sessionMap[auth]
 	if !ok {
-		writeError(&w, "invalid session, please reload your page", 403)
+		writeError(&w, "invalid session, please reload your page", 401)
 		return
 	}
 
@@ -113,7 +113,7 @@ func pictureRetrievalHandler(w http.ResponseWriter, r *http.Request) {
 
 	pic, err := getPicture(s.user, pictureID)
 	if err != nil {
-		writeError(&w, "you cannot access this resource", 401)
+		writeError(&w, "this picture does not exist", 410)
 		return
 	}
 
@@ -132,6 +132,50 @@ func pictureRetrievalHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	w.WriteHeader(http.StatusOK)
 	w.Write(data)
+}
+
+// Protected DELETE
+func pictureDeletionHandler(w http.ResponseWriter, r *http.Request) {
+	auth := r.Header.Get("token")
+	vars := mux.Vars(r)
+	pictureID, ok := vars["pictureID"]
+	if !ok {
+		writeError(&w, "no picture ID provided", 400)
+		return
+	}
+
+	s, ok := sessionMap[auth]
+	if !ok {
+		writeError(&w, "invalid session, please reload your page", 403)
+		return
+	}
+
+	pic, err := getPicture(s.user, pictureID)
+	if err != nil {
+		writeError(&w, "you cannot access this resource", 401)
+		return
+	}
+
+	deleteFromS3(pic.ImagePath)
+	deletePicture(pic.Mask)
+
+	resp := jsonResponse{
+		Success: true,
+	}
+	data, err := json.Marshal(resp)
+	if err != nil {
+		panic(err)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(data)
+}
+
+func deleteFromS3(path string) error {
+	s3Client, err := minio.New(config.S3Endpoint, config.S3Key, config.S3Secret, true)
+	if err != nil {
+		return err
+	}
+	return s3Client.RemoveObject(config.S3SpaceName, path)
 }
 
 // TODO: change filename on the server in case duplicate names get uploaded!
