@@ -70,6 +70,7 @@ func pictureUploadHandler(w http.ResponseWriter, r *http.Request) {
 	picture := Picture{
 		ImagePath: bucketPath,
 		Mask:      mask,
+		ValidURL:  url,
 	}
 	s.user.Pictures = append(s.user.Pictures, picture)
 	saveUser(s.user)
