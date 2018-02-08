@@ -10,8 +10,6 @@ import (
 	"os"
 	"time"
 
-	"log"
-
 	"github.com/gorilla/mux"
 	minio "github.com/minio/minio-go"
 )
@@ -36,14 +34,14 @@ func pictureUploadHandler(w http.ResponseWriter, r *http.Request) {
 
 	err := r.ParseMultipartForm(2 << 21) // Superpage! :)
 	if err != nil {
-		log.Println(err.Error())
+		l.Println(err.Error())
 		writeError(&w, "invalid form data", 400)
 		return
 	}
 
 	file, handler, err := r.FormFile("file")
 	if err != nil {
-		log.Println(err.Error())
+		l.Println(err.Error())
 		writeError(&w, "error getting photo data", 400)
 		return
 	}
@@ -190,6 +188,7 @@ func uploadToS3(fileName string, s *session) (string, string, error) {
 	if err != nil && err != io.EOF {
 		return "", "", err
 	}
+
 	contentType := http.DetectContentType(buf)
 
 	s3Client, err := minio.New(config.S3Endpoint, config.S3Key, config.S3Secret, true)
