@@ -167,19 +167,57 @@ func deletePicture(pictureMask string) {
 	db.Exec("DELETE FROM pictures WHERE mask = ?", pictureMask)
 }
 
-func getUsersPicturesAndRefreshURL(user *User, limit int, page int) []Picture {
+// This will attempt to paginate on lines of multiples of limit
+// If page * limit > length of result, then it will return the modulus
+// of the final page and limit
+// e.g. If you ask for page 2 of 50 results on limit 30, it will return the final 20 results
+func getUsersPicturesAndRefreshURL(user *User, limit int, page int) (pictures []Picture, currentPage int, maxPages int) {
 	db, err := openConnection()
 	if err != nil {
 		panic(err)
 	}
 	defer db.Close()
+	pictures = make([]Picture, 0)
 	var (
-		pictures = make([]Picture, 0)
+		rowCount int
+		offset   int
 	)
-	db.Limit(limit).Offset((page-1)*limit).Where("user_id = ?", user.ID).Find(&pictures)
-	// if len(pictures) == 0, try getting the final picture_size % limit
+	if limit <= 0 {
+		limit = 1
+	}
+	if page <= 0 {
+		page = 1
+	}
 
-	return pictures
+	db.Model(&Picture{}).Where("user_id = ?", user.ID).Count(&rowCount)
+	if (page-1)*limit >= rowCount {
+		page = (rowCount / limit)
+		if page == 0 {
+			page++
+		}
+	}
+
+	offset = (page - 1) * limit
+	maxPages = (rowCount / limit)
+	if limit*page > rowCount || (maxPages == 0 && rowCount > 0) {
+		maxPages++
+	}
+
+	db.Limit(limit).Offset(offset).Where("user_id = ?", user.ID).Find(&pictures)
+	goodTime := time.Now().Add(10 * time.Minute)
+	for _, picture := range pictures {
+		if picture.ExpirationTime.Before(goodTime) {
+			url, err := refreshURL(&picture)
+			if err != nil {
+				panic(err)
+			}
+			picture.ValidURL = url
+			picture.ExpirationTime = time.Now().Add(urlExpirationDuration)
+			db.Save(&picture)
+		}
+	}
+
+	return pictures, page, maxPages
 }
 
 /****************

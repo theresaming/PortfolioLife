@@ -73,8 +73,15 @@ func TestGetPicturesFromUser(t *testing.T) {
 	testUser := &User{
 		ID: 3,
 	}
-	pictures := getUsersPicturesAndRefreshURL(testUser, 30, 1)
-	fmt.Println(len(pictures))
+	var (
+		limit = 30
+		page  = 2
+	)
+	pictures, page, maxPages := getUsersPicturesAndRefreshURL(testUser, limit, page)
+	fmt.Printf("Page [%d] out of [%d]\n", page, maxPages)
+	for _, pic := range pictures {
+		fmt.Println(pic.Mask)
+	}
 }
 
 func init() {

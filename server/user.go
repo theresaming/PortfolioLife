@@ -108,7 +108,7 @@ func registrationHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 }
 
-// Protected
+// Protected POST
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
 	auth := r.Header.Get("token")
 
@@ -136,7 +136,7 @@ func logoutHandler(w http.ResponseWriter, r *http.Request) {
 func getUsersPicturesHandler(w http.ResponseWriter, r *http.Request) {
 	auth := r.Header.Get("token")
 
-	_, ok := sessionMap[auth]
+	s, ok := sessionMap[auth]
 	if !ok {
 		writeError(&w, "invalid session, please reload your page", 403)
 		return
@@ -145,17 +145,24 @@ func getUsersPicturesHandler(w http.ResponseWriter, r *http.Request) {
 		maxPhotosPerPage = 30
 	)
 	var (
-		count   int
-		page    = 1
-		maxPage int
+		page  = 1
+		limit = maxPhotosPerPage
 	)
 
 	pageStr := r.URL.Query().Get("page")
+	limitStr := r.URL.Query().Get("limit")
 	if len(pageStr) != 0 {
 		if p, err := strconv.Atoi(pageStr); err != nil {
 			page = 1
 		} else {
 			page = p
+		}
+	}
+	if len(limitStr) != 0 {
+		if l, err := strconv.Atoi(limitStr); err == nil {
+			if l < maxPhotosPerPage {
+				limit = l
+			}
 		}
 	}
 
@@ -164,20 +171,15 @@ func getUsersPicturesHandler(w http.ResponseWriter, r *http.Request) {
 		URL  string `json:"url"`
 	}
 
-	/*maxPage = (len(userPictures) / maxPhotosPerPage) + 1
-	if page > maxPage {
-		page = maxPage
+	pictures, page, maxPages := getUsersPicturesAndRefreshURL(s.user, limit, page)
+	paginated := make([]paginatedPicture, len(pictures))
+
+	var i int
+	for _, p := range pictures {
+		paginated[i].Mask = p.Mask
+		paginated[i].URL = p.ValidURL
+		i++
 	}
-	fmt.Println("user photos: ", len(userPictures))
-
-	if page == maxPage {
-		count = len(userPictures) % maxPhotosPerPage
-	}
-
-	userPictures := getUsersPicturesAndRefreshURL(s.user, count, page)*/
-
-	// TODO: Make this a LOT better!!!
-	paginated := make([]paginatedPicture, count)
 
 	resp := struct {
 		*jsonResponse
@@ -190,9 +192,9 @@ func getUsersPicturesHandler(w http.ResponseWriter, r *http.Request) {
 			Success: true,
 		},
 		paginated,
-		count,
+		len(pictures),
 		page,
-		maxPage,
+		maxPages,
 	}
 
 	data, err := json.Marshal(resp)
