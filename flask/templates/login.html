@@ -1,55 +1,40 @@
-<link rel="stylesheet" href="/static/skeleton.css" type="text/css">
-<link rel="stylesheet" href="/static/login.css" type="text/css">
+{% extends "layout.html" %}
+
 {% block body %}
+    {% if session['logged_in'] %}
+        <p>You're logged in already!</p>
+    {% else %}
+        <form action="/login" method="POST">
+            <div class="login">
+                <div class="login-screen">
+                    <h2>Login</h2>
 
-{% if session['logged_in'] %}
-<p>You're logged in already!</p>
-{% else %}
+                    <div class="login-form">
+                        <div class="control-group">
+                            <input type="text" class="login-field" value="" placeholder="email" name="email">
+                            <label class="login-field-icon fui-user" for="login-name"></label>
+                        </div>
 
-<form action="/login" method="POST">
-	<div class="login">
-		<div class="login-screen">
-			<div class="app-title">
-				<h1>PortfolioLife <br />Login</h1>
-				{% with messages = get_flashed_messages() %}
-				{% if messages %}
-				  <ul class=flashes>
-				  {% for message in messages %}
-					  {{ message }} <br />
-				  {% endfor %}
-				  </ul>
-				{% endif %}
-			  {% endwith %}
-			</div>
+                        <div class="control-group">
+                            <input type="password" class="login-field" value="" placeholder="password" name="password">
+                            <label class="login-field-icon fui-lock" for="login-pass"></label>
+                        </div>
 
-			<div class="login-form">
-				<div class="control-group">
-				<input type="text" class="login-field" value="" placeholder="email" name="email">
-				<label class="login-field-icon fui-user" for="login-name"></label>
-				</div>
+                        <input type="submit" value="Log in" class="btn btn-primary btn-large btn-block" >
+                        <br>
+                        <a href="registration">Don't have an account? Register here.</a>
+                        <div class="container">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
 
-				<div class="control-group">
-				<input type="password" class="login-field" value="" placeholder="password" name="password">
-				<label class="login-field-icon fui-lock" for="login-pass"></label>
-				</div>
+        <!-- scripts -->
+        <script src="/static/scripts/home.js" type="text/jsx"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react-dom.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
 
-                <input type="submit" value="Log in" class="btn btn-primary btn-large btn-block" >
-			    <br>
-                <a href="registration">Don't have an account? Register here.</a>
-				<div class="container">
-
-</form>
-
-<!-- scripts -->
-<script src="/static/scripts/home.js" type="text/jsx"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react-dom.min.js"></script>
-<script src="http://cdnjs.cloudflare.com/ajax/libs/react/0.13.3/JSXTransformer.js"></script>
-
-{% endif %}
-<footer>
-
-
-</footer>
-
+    {% endif %}
 {% endblock %}

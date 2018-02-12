@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+{% if not session['logged_in'] %}
+    <p>You're not logged in!</p>
+{% else %}
+    <h2>Welcome!</h2>
+    <div class="upload">
+        <a href="{{ url_for('load_upload') }}">Upload Photos</a>
+    </div>
+
+
+    <div class="delete">
+        <a href="{{ url_for('load_delete') }}">Delete Photos</a>
+    </div>
+
+
+    <dic class="pictures">
+        <p>Pictures go here.</p>
+    </dic>
+
+
+    <div class="albums">
+        <p>Albums go here.</p>
+    </div>
+{% endif %}
+
+{% endblock %}

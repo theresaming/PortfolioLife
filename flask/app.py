@@ -1,18 +1,15 @@
 from flask import Flask
-from flask import flash, redirect, render_template, request, session, abort, jsonify, json
-import httplib, urllib
+from flask import flash, render_template, request, session, json
 import requests
 import os
-from sqlalchemy.orm import sessionmaker
-from wtforms import Form, BooleanField, StringField, PasswordField, validators
-
-from sqldb  import *
+from wtforms import Form, StringField, PasswordField, validators
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://jd:jd2018@67.205.168.129/junior_design'
 # db = SQLAlchemy(app)
+
 
 class RegistrationForm(Form):
     username = StringField('Username', [validators.Length(min=4, max=25)])
@@ -35,12 +32,14 @@ app.config['OAUTH_CREDENTIALS'] = {
     }
 }
 
+
 @app.route('/')
-def home():
+def login():
     if not session.get('logged_in'):
         return render_template('login.html')
     else:
-        return "Hello!  <a href='/logout'>Logout</a>"
+        return load_home()
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def do_admin_login():
@@ -58,12 +57,13 @@ def do_admin_login():
         jsonDict = json.loads(r.text)
         # print jsonDict['success']
         # print jsonDict['message']
-        if jsonDict['success'] == True:
+        if jsonDict['success']:
             session['logged_in'] = True
-            return home()
+            return login()
         else:
             flash(jsonDict['message'])
-    return home()
+    return login()
+
 
 @app.route('/registration', methods=['GET','POST'])
 def register():
@@ -83,17 +83,37 @@ def register():
         # print "jsonDict: ", jsonDict
         # print "jsonDict['message']", jsonDict['message']
         # print "jsonDict['success']", jsonDict['success']
-        if jsonDict['success'] == True:
+        if jsonDict['success']:
             flash('Thanks for registering')
             return render_template('login.html')
         else:
             flash(jsonDict['message'])
     return render_template('registration.html', form=form)
 
+
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
-    return home()
+    return login()
+
+
+@app.route("/home")
+def load_home():
+    if session.get('logged_in'):
+        return render_template('home.html')
+    else:
+        return login()
+
+
+@app.route("/upload")
+def load_upload():
+    return render_template('uploadPhotos.html')
+
+
+@app.route("/delete")
+def load_delete():
+    return render_template('deletePhotos.html')
+
 
 if __name__ == "__main__":
     app.run(debug=True,host='0.0.0.0', port=4000)
