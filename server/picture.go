@@ -26,7 +26,7 @@ var (
 func pictureUploadHandler(w http.ResponseWriter, r *http.Request) {
 	auth := r.Header.Get("token")
 
-	s, ok := sessionMap[auth]
+	s, ok := getSession(auth)
 	if !ok {
 		writeError(&w, "invalid session, please reload your page", 401)
 		return
@@ -60,7 +60,7 @@ func pictureUploadHandler(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	// Upload to S3, then return a message w/ link
-	url, bucketPath, err := uploadToS3(f.Name(), &s)
+	url, bucketPath, err := uploadToS3(f.Name(), s)
 	if err != nil {
 		// TODO: make this graceful
 		panic(err)
@@ -104,7 +104,7 @@ func pictureRetrievalHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s, ok := sessionMap[auth]
+	s, ok := getSession(auth)
 	if !ok {
 		writeError(&w, "invalid session, please reload your page", 403)
 		return
@@ -143,7 +143,7 @@ func pictureDeletionHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s, ok := sessionMap[auth]
+	s, ok := getSession(auth)
 	if !ok {
 		writeError(&w, "invalid session, please reload your page", 403)
 		return

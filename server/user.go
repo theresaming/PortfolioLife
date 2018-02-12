@@ -39,9 +39,10 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 			},
 			sessionID,
 		}
-		sessionMap[sessionID] = session{
+		sess := &session{
 			user: user,
 		}
+		sessionMap.Set(sessionID, sess)
 		setUserToken(user, sessionID)
 		data, err := json.Marshal(resp)
 		if err != nil {
@@ -97,9 +98,10 @@ func registrationHandler(w http.ResponseWriter, r *http.Request) {
 		},
 		token,
 	}
-	sessionMap[token] = session{
+	sess := &session{
 		user: user,
 	}
+	sessionMap.Set(token, sess)
 	data, err := json.Marshal(resp)
 	if err != nil {
 		panic(err)
@@ -112,12 +114,12 @@ func registrationHandler(w http.ResponseWriter, r *http.Request) {
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
 	auth := r.Header.Get("token")
 
-	s, ok := sessionMap[auth]
+	s, ok := getSession(auth)
 	if !ok {
 		writeError(&w, "you are already logged out!", 403)
 		return
 	}
-	delete(sessionMap, auth)
+	sessionMap.Remove(auth)
 	logoutUser(s.user)
 	resp := jsonResponse{
 		Success: true,
@@ -136,7 +138,7 @@ func logoutHandler(w http.ResponseWriter, r *http.Request) {
 func getUsersPicturesHandler(w http.ResponseWriter, r *http.Request) {
 	auth := r.Header.Get("token")
 
-	s, ok := sessionMap[auth]
+	s, ok := getSession(auth)
 	if !ok {
 		writeError(&w, "invalid session, please reload your page", 403)
 		return
@@ -209,7 +211,7 @@ func getUsersPicturesHandler(w http.ResponseWriter, r *http.Request) {
 func validateUserLoggedIn(w http.ResponseWriter, r *http.Request) {
 	auth := r.Header.Get("token")
 
-	s, ok := sessionMap[auth]
+	s, ok := getSession(auth)
 	if !ok {
 		writeError(&w, "invalid session, please reload your page", 403)
 		return

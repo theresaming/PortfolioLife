@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/paul-io/go-expiring-map"
 )
 
 type jsonResponse struct {
@@ -24,8 +25,13 @@ type session struct {
 	user *User
 }
 
+const (
+	sessionTimeToExpire = 2 // 2 hours
+)
+
 var (
-	sessionMap = make(map[string]session)
+	// sessionMap = make(map[string]session)
+	sessionMap *expiring.ThreadSafeMap
 )
 
 type routes []route
@@ -37,6 +43,9 @@ type route struct {
 }
 
 func initServer() {
+	// initialize expiring map
+	sessionMap = expiring.NewThreadSafe(sessionTimeToExpire, time.Hour, true)
+
 	r := mux.NewRouter().StrictSlash(true)
 	for _, route := range apiRoutes {
 		handler := route.HandlerFunc
@@ -129,7 +138,7 @@ func validationHandler(h http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 		// TODO: something with this session (pass on the user through the middleware)
-		_, ok := sessionMap[auth]
+		_, ok := getSession(auth)
 		if !ok {
 			errorHandler(h, "invalid token", 401).ServeHTTP(w, r)
 			return
@@ -155,6 +164,24 @@ func writeError(w *http.ResponseWriter, message string, code int) {
 		panic(err)
 	}
 	http.Error(*w, string(data), code)
+}
+
+func getSession(key string) (sess *session, ok bool) {
+	s, ok := sessionMap.Get(key)
+	if !ok {
+		u, err := getUserFromSession(key)
+		if err != nil {
+			return nil, false
+		}
+		ok = true
+		sess = &session{
+			user: u,
+		}
+		sessionMap.Set(key, sess)
+		return
+	}
+	sess = s.(*session)
+	return
 }
 
 func getFuncName(i interface{}) string {
