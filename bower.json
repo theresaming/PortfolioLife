@@ -1,0 +1,17 @@
+{
+  "name": "flask",
+  "homepage": "https://github.com/theresaming/PortfolioLife",
+  "authors": [
+    "theresaming <theresaming@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

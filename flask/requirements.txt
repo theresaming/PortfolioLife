@@ -1,8 +1,11 @@
+certifi==2018.1.18
+chardet==3.0.4
 click==6.7
 Flask==0.11.1
 Flask-OAuth==0.12
 Flask-WTF==0.14.2
 httplib2==0.10.3
+idna==2.6
 itsdangerous==0.24
 Jinja2==2.9.6
 MarkupSafe==1.0
@@ -10,6 +13,7 @@ oauth2==1.9.0.post1
 pathtools==0.1.2
 requests==2.18.4
 SQLAlchemy==1.1.15
+urllib3==1.22
 virtualenv==15.1.0
 Werkzeug==0.14.1
 WTForms==2.1
