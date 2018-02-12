@@ -11,11 +11,20 @@
 		<div class="login-screen">
 			<div class="app-title">
 				<h1>PortfolioLife <br />Login</h1>
+				{% with messages = get_flashed_messages() %}
+				{% if messages %}
+				  <ul class=flashes>
+				  {% for message in messages %}
+					  {{ message }} <br />
+				  {% endfor %}
+				  </ul>
+				{% endif %}
+			  {% endwith %}
 			</div>
 
 			<div class="login-form">
 				<div class="control-group">
-				<input type="text" class="login-field" value="" placeholder="username" name="username">
+				<input type="text" class="login-field" value="" placeholder="email" name="email">
 				<label class="login-field-icon fui-user" for="login-name"></label>
 				</div>
 
@@ -28,7 +37,6 @@
 			    <br>
                 <a href="registration">Don't have an account? Register here.</a>
 				<div class="container">
-      <div id="content"></div>
 
 </form>
 

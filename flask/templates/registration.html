@@ -8,14 +8,14 @@
   {% if messages %}
     <ul class=flashes>
     {% for message in messages %}
-      <li>{{ message }}</li>
+        {{ message }} <br />
     {% endfor %}
     </ul>
   {% endif %}
 {% endwith %}
 <form method=post>
   <dl>
-    {{ render_field(form.username) }}
+    {{ render_field(form.name) }}
     {{ render_field(form.email) }}
     {{ render_field(form.password) }}
     {{ render_field(form.confirm) }}

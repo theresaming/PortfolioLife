@@ -42,74 +42,53 @@ def home():
     else:
         return "Hello!  <a href='/logout'>Logout</a>"
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def do_admin_login():
-    POST_USERNAME = str(request.form['username'])
-    POST_PASSWORD = str(request.form['password'])
-
-    Session = sessionmaker(bind=engine)
-    s = Session()
-    query = s.query(User).filter(User.username.in_([POST_USERNAME]), User.password.in_([POST_PASSWORD]) )
-    result = query.first()
-    if result:
-        session['logged_in'] = True
-    else:
-        flash('wrong password!')
+    if request.method == 'POST':
+        email = request.form['email']
+        print email
+        password = request.form['password']
+        print password
+        data = {
+            "email": email,
+            "password": password
+        }
+        jsonStr = json.dumps(data)
+        r = requests.post('http://67.205.168.129:8080/user/login', jsonStr)
+        jsonDict = json.loads(r.text)
+        # print jsonDict['success']
+        # print jsonDict['message']
+        if jsonDict['success'] == True:
+            session['logged_in'] = True
+            return home()
+        else:
+            flash(jsonDict['message'])
     return home()
 
 @app.route('/registration', methods=['GET','POST'])
 def register():
     form = RegistrationForm(request.form)
     if request.method == 'POST':
-        username = form.username.data
+        name = form.name.data
         password = form.password.data
         email = form.email.data
         data = {
             'email': email,
-            'name': username,
+            'name': name,
             'password': password,
             }
         jsonStr = json.dumps(data)
         r = requests.post("http://67.205.168.129:8080/user/register", jsonStr)
         jsonDict = json.loads(r.text)
-        print "jsonDict: ", jsonDict
-        print "jsonDict['message']", jsonDict['message']
-        print "jsonDict['success']", jsonDict['success']
+        # print "jsonDict: ", jsonDict
+        # print "jsonDict['message']", jsonDict['message']
+        # print "jsonDict['success']", jsonDict['success']
         if jsonDict['success'] == True:
             flash('Thanks for registering')
             return render_template('login.html')
         else:
             flash(jsonDict['message'])
     return render_template('registration.html', form=form)
-
-@app.route('/api/register', methods=['POST'])
-def reg():
-    content = request.get_json()
-    print (content)
-
-# @app.route('/authorize/facebook')
-# def oauth_authorize(provider):
-#     if not current_user.is_anonymous():
-#         return redirect(url_for('login'))
-#     oauth = OAuthSignIn.get_provider(provider)
-#     return oauth.authorize()
-#
-# @app.route('/callback/facebook')
-# def oauth_callback(provider):
-#     if not current_user.is_anonymous():
-#         return redirect(url_for('index'))
-#     oauth = OAuthSignIn.get_provider(provider)
-#     social_id, username, email = oauth.callback()
-#     if social_id is None:
-#         flash('Authentication failed.')
-#         return redirect(url_for('logout'))
-#     user = User.query.filter_by(social_id=social_id).first()
-#     if not user:
-#         user = User(social_id=social_id, nickname=username, email=email)
-#         db.session.add(user)
-#         db.session.commit()
-#     login_user(user, True)
-#     return redirect(url_for('login'))
 
 @app.route("/logout")
 def logout():
