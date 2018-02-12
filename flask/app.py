@@ -69,7 +69,7 @@ def do_admin_login():
 def register():
     form = RegistrationForm(request.form)
     if request.method == 'POST':
-        name = form.name.data
+        name = form.username.data
         password = form.password.data
         email = form.email.data
         data = {
