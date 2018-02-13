@@ -3,7 +3,15 @@
 {% block body %}
     {% from "_formhelpers.html" import render_field %}
     <h2>Registration</h2>
-
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class=flashes>
+                {% for message in messages %}
+                    {{ message }} <br />
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
     <div class="registration">
         <form method=post>
             <dl>

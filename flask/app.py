@@ -81,7 +81,7 @@ def register():
         r = requests.post("http://67.205.168.129:8080/user/register", jsonStr)
         jsonDict = json.loads(r.text)
         # print "jsonDict: ", jsonDict
-        # print "jsonDict['message']", jsonDict['message']
+        print "jsonDict['message']", jsonDict['message']
         # print "jsonDict['success']", jsonDict['success']
         if jsonDict['success']:
             flash('Thanks for registering')
