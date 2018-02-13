@@ -1,7 +1,7 @@
-from flask import Flask
-from flask import flash, render_template, request, session, json
+from flask import Flask, flash, render_template, request, session, json
 import requests
 import os
+from werkzeug import secure_filename
 from wtforms import Form, StringField, PasswordField, validators
 
 app = Flask(__name__)
@@ -104,11 +104,16 @@ def load_home():
     else:
         return login()
 
-
 @app.route("/upload")
 def load_upload():
     return render_template('uploadPhotos.html')
 
+@app.route('/uploader', methods = ['GET', 'POST'])
+def upload_file():
+   if request.method == 'POST':
+      f = request.files['file']
+      f.save(secure_filename(f.filename))
+      return 'file uploaded successfully'
 
 @app.route("/delete")
 def load_delete():

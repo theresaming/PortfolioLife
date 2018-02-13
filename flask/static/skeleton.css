@@ -430,6 +430,9 @@ div.title-bar {
     margin-bottom: 56px;
 }
 
+div.title-text a {
+    color: rgb(214, 211, 235);
+}
 
 div.title-text {
     position: absolute;
