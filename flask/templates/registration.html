@@ -2,7 +2,7 @@
 
 {% block body %}
     {% from "_formhelpers.html" import render_field %}
-    <h2>Registration</h2>
+    <h2 style= "color: #4A4A4A;">Registration</h2>
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             <ul class=flashes>
@@ -13,14 +13,18 @@
         {% endif %}
     {% endwith %}
     <div class="registration">
-        <form method=post>
-            <dl>
-                {{ render_field(form.username) }}
-                {{ render_field(form.email) }}
-                {{ render_field(form.password) }}
-                {{ render_field(form.confirm) }}
-            </dl>
-            <p><input type=submit value=Register></p> 
+        <form method="post">
+            <div class = "row">
+                <dl>
+                    {{ render_field(form.username) }}
+                    {{ render_field(form.email) }}
+                    {{ render_field(form.password) }}
+                    {{ render_field(form.confirm) }}
+                </dl>
+            </div>
+            <p><input type=submit value=Register></p>
         </form>
+
     </div>
+    <a href = "{{ url_for('login')}}">Go back</a>
 {% endblock %}

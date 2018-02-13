@@ -2,42 +2,48 @@
 
 {% block body %}
     {% if session['logged_in'] %}
-        <p>You're logged in already!</p>
+        <!-- TODO: redirect to home page -->
+        <a href="{{ url_for('load_home') }}">
+            <p>You're logged in already! Go home?</p>
+        </a>
     {% else %}
-        <form action="/login" method="POST">
-            <div class="login">
-                <div class="login-screen">
-                    <h2>Login</h2>
-                    {% with messages = get_flashed_messages() %}
-                        {% if messages %}
-                            <ul class=flashes>
-                                {% for message in messages %}
-                                    {{ message }} <br />
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
-                    {% endwith %}
-                    <div class="login-form">
-                        <div class="control-group">
-                            <input type="text" class="login-field" value="" placeholder="email" name="email">
-                            <label class="login-field-icon fui-user" for="login-name"></label>
-                        </div>
+        <div class = "container">
+            <div class="row">
+                <div class = "twelve columns">
+                    <form action="/login" method="POST">
+                        <div class="login">
+                            <div class="login-screen">
+                                <h3>Welcome to PortfolioLife!</h3>
+                                {% with messages = get_flashed_messages() %}
+                                    {% if messages %}
+                                        <ul class=flashes>
+                                            {% for message in messages %}
+                                                {{ message }} <br />
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                {% endwith %}
+                                <div class="login-form">
+                                    <div class="control-group">
+                                        <input type="text" class="login-field" value="" placeholder="email" name="email">
+                                        <label class="login-field-icon fui-user" for="login-name"></label>
+                                    </div>
 
-                        <div class="control-group">
-                            <input type="password" class="login-field" value="" placeholder="password" name="password">
-                            <label class="login-field-icon fui-lock" for="login-pass"></label>
-                        </div>
+                                    <div class="control-group">
+                                        <input type="password" class="login-field" value="" placeholder="password" name="password">
+                                        <label class="login-field-icon fui-lock" for="login-pass"></label>
+                                    </div>
 
-                        <input type="submit" value="Log in" class="btn btn-primary btn-large btn-block" >
-                        <br>
-                        <a href="registration">Don't have an account? Register here.</a>
-                        <div class="container">
+                                    <input type="submit" value="Log in" class="btn btn-primary btn-large btn-block" >
+                                    <br>
+                                    <a href="registration">Don't have an account? Register here.</a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
-        </form>
-
+        </div>
         <!-- scripts -->
         <script src="/static/scripts/home.js" type="text/jsx"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react.min.js"></script>

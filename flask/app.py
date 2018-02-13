@@ -2,23 +2,31 @@ from flask import Flask, flash, render_template, request, session, json
 import requests
 import os
 from werkzeug import secure_filename
+from werkzeug.datastructures import FileStorage
 from wtforms import Form, StringField, PasswordField, validators
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://jd:jd2018@67.205.168.129/junior_design'
-# db = SQLAlchemy(app)
 
+
+# allowed image type initialization WHOOOWHEEEEEE
+# ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png']
+# FILE_CONTENT_TYPES = { # these will be used to set the content type of S3 object. It is binary by default.
+#     'jpg': 'image/jpeg',
+#     'jpeg': 'image/jpeg',
+#     'png': 'image/png'
+# }
 
 class RegistrationForm(Form):
     username = StringField('Username', [validators.Length(min=4, max=25)])
     email = StringField('Email Address', [validators.Length(min=6, max=35)])
-    password = PasswordField('New Password', [
+    password = PasswordField('Create Password', [
         validators.DataRequired(),
         validators.EqualTo('confirm', message='Passwords must match')
     ])
-    confirm = PasswordField('Repeat Password')
+    confirm = PasswordField('Confirm Password')
 
 
 app.config['OAUTH_CREDENTIALS'] = {
@@ -108,12 +116,31 @@ def load_home():
 def load_upload():
     return render_template('uploadPhotos.html')
 
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 @app.route('/uploader', methods = ['GET', 'POST'])
 def upload_file():
-   if request.method == 'POST':
-      f = request.files['file']
-      f.save(secure_filename(f.filename))
-      return 'file uploaded successfully'
+    if request.method == 'POST':
+        f = request.files['file']
+        # saves files locally
+        # f.save(secure_filename(f.filename))
+        if f.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+        if f and allowed_file(f.filename):
+            #TODO: send to server
+            #SQL injection protector shit
+            filename = secure_filename(f.filename)
+            # data = {
+            #     'upload': f,read()
+            #     }
+            # jsonStr = json.dumps(data)
+            # r = requests.post('http://67.205.168.129:8080/picture/upload', jsonStr)
+            return 'file uploaded successfully'
 
 @app.route("/delete")
 def load_delete():
@@ -122,3 +149,6 @@ def load_delete():
 
 if __name__ == "__main__":
     app.run(debug=True,host='0.0.0.0', port=4000)
+    # max upload thingy
+    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 # 16 MB
+    # TODO: throw a 404 page if filesize is too large

@@ -1,18 +1,21 @@
-<!doctype html>
+<!DOCTYPE html>
 <title>PortfolioLife</title>
 <link rel="stylesheet" href="/static/skeleton.css" type="text/css">
-<link rel="stylesheet" href="/static/login.css" type="text/css">
+<link rel="stylesheet" href="/static/style.css" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Quicksand:300" rel="stylesheet">
 
-<div class=page>
     <div class="title-bar">
         <a href="{{ url_for('load_home') }}">
             <div class="title-text">
-                PortfolioLife
+                Portfolio<b>Life</b>
             </div>
         </a>
-        <div class="logout">
-            <a href="{{ url_for('logout') }}">Logout</a>
-        </div>
+        {% if session.get('logged_in') %}
+            <div class="logout">
+                <a href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        {% else %}
+        {% endif %}
     </div>
     <div class="spacer">
         &nbsp;
