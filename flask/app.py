@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 from flask import Flask, flash, render_template, request, session, json, make_response
+=======
+from flask import Flask, flash, render_template, request, session, json, redirect, make_response
+>>>>>>> d12f2be93a7e5a8959fe58ca728fbf3cf2bcc61a
 import requests
 import os
 from werkzeug import secure_filename
@@ -18,6 +22,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://jd:jd2018@67.205.168.129/junior
 #     'jpeg': 'image/jpeg',
 #     'png': 'image/png'
 # }
+
+API_URL = "http://67.205.168.129:8080/"
 
 class RegistrationForm(Form):
     username = StringField('Username', [validators.Length(min=4, max=25)], description = "name")
@@ -43,7 +49,7 @@ app.config['OAUTH_CREDENTIALS'] = {
 @app.route('/')
 def login():
     if not session.get('logged_in'):
-        return render_template('login.html')
+        return redirect("/login", code=302)
     else:
         return load_home()
 
@@ -66,11 +72,17 @@ def do_admin_login():
         # print jsonDict['message']
         if jsonDict['success']:
             session['logged_in'] = True
+<<<<<<< HEAD
             token = jsonDict['token']
             return login()
+=======
+            resp = make_response(redirect('/'))
+            resp.set_cookie('token', jsonDict['token'])
+            return resp
+>>>>>>> d12f2be93a7e5a8959fe58ca728fbf3cf2bcc61a
         else:
             flash(jsonDict['message'])
-    return login()
+    return render_template('login.html')
 
 
 @app.route('/registration', methods=['GET','POST'])
@@ -103,12 +115,17 @@ def register():
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
-    return login()
+    requests.post(API_URL + "user/logout", headers={'token': request.cookies.get('token')})
+
+    resp = make_response(redirect('/'))
+    resp.set_cookie('token', '', expires=0)
+    return resp
 
 
 @app.route("/home")
 def load_home():
     if session.get('logged_in'):
+        token = request.cookies.get('token')
         return render_template('home.html')
     else:
         return login()
