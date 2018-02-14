@@ -3,3 +3,4 @@
 server/server
 server/server.exe
 server/run-server.sh
+flask/*.pyc
