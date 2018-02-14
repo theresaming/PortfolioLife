@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-from flask import Flask, flash, render_template, request, session, json, make_response
-=======
 from flask import Flask, flash, render_template, request, session, json, redirect, make_response
->>>>>>> d12f2be93a7e5a8959fe58ca728fbf3cf2bcc61a
 import requests
 import os
 from werkzeug import secure_filename
@@ -72,14 +68,9 @@ def do_admin_login():
         # print jsonDict['message']
         if jsonDict['success']:
             session['logged_in'] = True
-<<<<<<< HEAD
-            token = jsonDict['token']
-            return login()
-=======
             resp = make_response(redirect('/'))
             resp.set_cookie('token', jsonDict['token'])
             return resp
->>>>>>> d12f2be93a7e5a8959fe58ca728fbf3cf2bcc61a
         else:
             flash(jsonDict['message'])
     return render_template('login.html')
