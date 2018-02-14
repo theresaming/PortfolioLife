@@ -58,11 +58,16 @@
     color: #4A4A4A;
 }
 
+h3 {
+    color: #4A4A4A;
+}
+
 
 .registration-text {
     text-align: center;
     font-size: 1em;
     /* padding-left: 40%; */
+    color: #4A4A4A;
 }
 
 html {

@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request, session, json
+from flask import Flask, flash, render_template, request, session, json, make_response
 import requests
 import os
 from werkzeug import secure_filename
@@ -20,14 +20,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://jd:jd2018@67.205.168.129/junior
 # }
 
 class RegistrationForm(Form):
-    username = StringField('Username', [validators.Length(min=4, max=25)])
-    email = StringField('Email Address', [validators.Length(min=6, max=35)])
+    username = StringField('Username', [validators.Length(min=4, max=25)], description = "name")
+    email = StringField('Email Address', [validators.Length(min=6, max=35)], description = "email")
     password = PasswordField('Create Password', [
         validators.DataRequired(),
         validators.EqualTo('confirm', message='Passwords must match')
-    ])
-    confirm = PasswordField('Confirm Password')
-
+    ], description = "password")
+    confirm = PasswordField('Confirm Password', description = "confirm password")
 
 app.config['OAUTH_CREDENTIALS'] = {
     'facebook': {
@@ -67,6 +66,7 @@ def do_admin_login():
         # print jsonDict['message']
         if jsonDict['success']:
             session['logged_in'] = True
+            token = jsonDict['token']
             return login()
         else:
             flash(jsonDict['message'])
@@ -93,6 +93,7 @@ def register():
         # print "jsonDict['success']", jsonDict['success']
         if jsonDict['success']:
             flash('Thanks for registering')
+            token = jsonDict['token']
             return render_template('login.html')
         else:
             flash(jsonDict['message'])

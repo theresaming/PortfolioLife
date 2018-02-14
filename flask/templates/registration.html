@@ -2,7 +2,7 @@
 
 {% block body %}
     {% from "_formhelpers.html" import render_field %}
-    <h2 style= "color: #4A4A4A;">Registration</h2>
+    <h3 style= "color: #4A4A4A;">Registration</h3>
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             <ul class=flashes>
@@ -22,9 +22,9 @@
                     {{ render_field(form.confirm) }}
                 </dl>
             </div>
-            <p><input type=submit value=Register></p>
+            <input type=submit value=Register>
+            <br />
+            <a href = "{{ url_for('login')}}">Back</a>
         </form>
-
     </div>
-    <a href = "{{ url_for('login')}}">Go back</a>
 {% endblock %}
