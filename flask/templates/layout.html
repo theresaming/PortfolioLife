@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="/static/style.css" type="text/css">
 <link href="https://fonts.googleapis.com/css?family=Quicksand:300" rel="stylesheet">
 
+
     <div class="title-bar">
         <a href="{{ url_for('load_home') }}">
             <div class="title-text">
@@ -24,7 +25,15 @@
     {% block body %}
     {% endblock %}
 
-    <footer>
+    <!--<footer>-->
+      <div class="footer-bar">
+          <!--<a href="{{ url_for('load_home') }}">-->
+              <div class="footer-text">
+                  Created by <b>The Curators</b>
+              </div>
+          <!--</a>-->
+      </div>
+    <!--</footer>-->
 
-    </footer>
-</div>
+
+<!--</div>-->
