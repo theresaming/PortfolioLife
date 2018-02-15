@@ -143,13 +143,15 @@ def upload_file():
         if f and allowed_file(f.filename):
             #TODO: send to server
             #SQL injection protector shit
+            # ^ this isn't actually needed
             filename = secure_filename(f.filename)
-            # data = {
-            #     'upload': f,read()
-            #     }
-            # jsonStr = json.dumps(data)
-            # r = requests.post('http://67.205.168.129:8080/picture/upload', jsonStr)
-            return 'file uploaded successfully'
+            req = requests.post(API_URL + "picture/upload", headers={'token': request.cookies.get('token')},
+                files = {'file': (filename, f, None, None)})
+            jsonDict = json.loads(req.text)
+            if jsonDict['success']:
+                return str(req.status_code) + '<br/>' + jsonDict['url'] + '<br/>' + jsonDict['pictureID']
+            else:
+                return str(req.status_code) + ': ' + jsonDict['message']
 
 @app.route("/delete")
 def load_delete():
