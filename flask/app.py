@@ -144,18 +144,25 @@ def upload_file():
             #TODO: send to server
             #SQL injection protector shit
             # ^ this isn't actually needed
+            # oh it was the secure_filename below i think
             filename = secure_filename(f.filename)
+            # print request.cookies.get('token')
             req = requests.post(API_URL + "picture/upload", headers={'token': request.cookies.get('token')},
                 files = {'file': (filename, f, None, None)})
             jsonDict = json.loads(req.text)
             if jsonDict['success']:
-                return str(req.status_code) + '<br/>' + jsonDict['url'] + '<br/>' + jsonDict['pictureID']
+                return render_template('home.html', imageUrl = jsonDict['url'])
+                # return str(req.status_code) + '<br/><br>' + jsonDict['url'] + '<br/><br>' + jsonDict['pictureID']
             else:
                 return str(req.status_code) + ': ' + jsonDict['message']
 
-@app.route("/delete")
+@app.route("/delete", methods = ['GET'])
 def load_delete():
+    req = requests.get(API_URL + "picture/pictureID", headers={'token': request.cookies.get('token')})
+    jsonDict = json.loads(req.text)
+
     return render_template('deletePhotos.html')
+
 
 
 if __name__ == "__main__":
