@@ -31,8 +31,20 @@
                 </div>
             </div>
         </div>
+        <header>
+            <div>
+                <img src= "{{ imageUrl }}" />
+            </div>
+              <!-- images placed inside block elements to deal with a Firefox rendering bug affecting  scaled flexbox images -->
+        </header>
         <div class = "row">
-            <div class = "fotorama">
+            <div class = "fotorama"
+            data-width="20%"
+            data-ratio="800/600"
+            data-minwidth="400"
+            data-maxwidth="1000"
+            data-minheight="300"
+            data-maxheight="20%">
                 <img src= "{{ imageUrl }}" />
             </div>
         </div>
