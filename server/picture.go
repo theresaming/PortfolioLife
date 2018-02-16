@@ -68,9 +68,10 @@ func pictureUploadHandler(w http.ResponseWriter, r *http.Request) {
 	// TODO: check for mask collisions and retry with a new random generation!
 	mask := generateRandomString(32)
 	picture := Picture{
-		ImagePath: bucketPath,
-		Mask:      mask,
-		ValidURL:  url,
+		ImagePath:      bucketPath,
+		Mask:           mask,
+		ValidURL:       url,
+		ExpirationTime: time.Now().Add(urlExpirationDuration),
 	}
 	s.user.Pictures = append(s.user.Pictures, picture)
 	saveUser(s.user)
