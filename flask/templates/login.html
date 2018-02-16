@@ -2,7 +2,6 @@
 
 {% block body %}
     {% if session['logged_in'] %}
-        <!-- TODO: redirect to home page -->
         <a href="{{ url_for('load_home') }}">
             <p>You're logged in already! Go home?</p>
         </a>

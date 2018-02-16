@@ -7,27 +7,29 @@
 {% else %}
     <div class = "container">
         <div class = "row">
-            <div class = "twelve columns">
-                <h3>Welcome!</h3>
-            </div>
-            <div class = "three columns">
-                <div class="upload">
-                    <a href="{{ url_for('load_upload') }}">Upload Photos</a>
+            <div class = "home-content">
+                <div class = "twelve columns">
+                    <h3>Welcome!</h3>
                 </div>
-            </div>
-            <div class = "three columns">
-                <div class="delete">
-                    <a href="{{ url_for('load_delete') }}">Delete Photos</a>
+                <div class = "three columns">
+                    <div class="upload">
+                        <a href="{{ url_for('load_upload') }}">Upload Photos</a>
+                    </div>
                 </div>
-            </div>
-            <div class = "three columns">
-                <dic class="pictures">
-                    <p>Pictures go here.</p>
-                </dic>
-            </div>
-            <div class = "three columns">
-                <div class="albums">
-                    <p>Albums go here.</p>
+                <div class = "three columns">
+                    <div class="delete">
+                        <a href="{{ url_for('load_delete') }}">Delete Photos</a>
+                    </div>
+                </div>
+                <div class = "three columns">
+                    <dic class="pictures">
+                        <p>Pictures go here.</p>
+                    </dic>
+                </div>
+                <div class = "three columns">
+                    <div class="albums">
+                        <p>Albums go here.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -37,17 +39,6 @@
             </div>
               <!-- images placed inside block elements to deal with a Firefox rendering bug affecting  scaled flexbox images -->
         </header>
-        <div class = "row">
-            <div class = "fotorama"
-            data-width="20%"
-            data-ratio="800/600"
-            data-minwidth="400"
-            data-maxwidth="1000"
-            data-minheight="300"
-            data-maxheight="20%">
-                <img src= "{{ imageUrl }}" />
-            </div>
-        </div>
     </div>
 {% endif %}
 

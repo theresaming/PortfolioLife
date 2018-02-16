@@ -1,6 +1,26 @@
 
 /* PorfolioLife custom styles */
 
+/* Navbar CSS  */
+.navbar {
+    color: #4A4A4A;
+}
+ul {
+    list-style: none;
+    text-align:left;
+}
+.navbar-list {
+    list-style: none;
+    margin-bottom: 0;
+}
+.navbar-item {
+    position: relative;
+    float: left;
+    margin-bottom: 0;
+    display: inline-block;
+}
+
+
 
 /* Header CSS */
 .title-bar {
@@ -51,7 +71,7 @@
 }
 
 .login-screen {
-    margin: 20%;
+    margin: 10%;
 }
 
 .login-screen h3 {
@@ -121,4 +141,9 @@ header div img {
   header div { margin: 0; }
   header { padding: 0; }
 
+}
+
+/* Home page styles */
+.home-content {
+    margin: 5%;
 }

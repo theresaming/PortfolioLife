@@ -158,9 +158,11 @@ def upload_file():
 
 @app.route("/delete", methods = ['GET'])
 def load_delete():
-    req = requests.get(API_URL + "picture/pictureID", headers={'token': request.cookies.get('token')})
+    req = requests.get(API_URL + "user/pictures", headers={'token': request.cookies.get('token')})
     jsonDict = json.loads(req.text)
-
+    print jsonDict['success']
+    for pictures in jsonDict['pictures']:
+        print pictures
     return render_template('deletePhotos.html')
 
 

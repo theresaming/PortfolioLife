@@ -27,15 +27,21 @@
     –––––––––––––––––––––––––––––––––––––––––––––––––– -->
     <link rel="icon" type="image/png" href="images/favicon.png">
 </head>
-    <nav class = "navbar">
+    <!-- <nav class = "navbar">
         <div class = "container">
-            <ul class = "navbar-list">
-                <li class="navbar-item">
-                    <a href={{url_for('load_home')}}>PortfolioLife</a>
-                </li>
-            </ul>
+            <div class = "row">
+
+                <ul class = "navbar-list">
+                    <li class="navbar-item">
+                        <a href={{url_for('load_home')}}>PORTFOLIOLIFE</a>
+                    </li>
+                    <li>
+                        UPLOAD PHOTOS
+                    </li>
+                </ul>
+            </div>
         </div>
-    </nav>
+    </nav> -->
     <div class="title-bar">
         <a href="{{ url_for('load_home') }}">
             <div class="title-text">
@@ -44,13 +50,6 @@
         </a>
 
         {% if session.get('logged_in') %}
-            <div class = "nav">
-                <div class="upload">
-                    <a href="{{ url_for('load_upload')}}">Upload Photos</a>
-                </div>
-                <div class = "delete">
-                    <a href="{{ url_for('load_delete')}}">Delete Photos</a>
-                </div>
                 <div class="logout">
                     <a href="{{ url_for('logout') }}">Logout</a>
                 </div>
