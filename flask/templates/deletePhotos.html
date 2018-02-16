@@ -10,6 +10,13 @@
             </p>
         </div>
     </div>
+    <div class = "row">
+        <div class = "twelve columns">
+            {% for imageUrl in imageUrlArr %}
+            <img src= "{{imageUrl}}" />
+            {% endfor %}
+        </div>
+    </div>
 </div>
 
 {% endblock %}

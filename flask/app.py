@@ -146,7 +146,7 @@ def upload_file():
             # ^ this isn't actually needed
             # oh it was the secure_filename below i think
             filename = secure_filename(f.filename)
-            # print request.cookies.get('token')
+            print request.cookies.get('token')
             req = requests.post(API_URL + "picture/upload", headers={'token': request.cookies.get('token')},
                 files = {'file': (filename, f, None, None)})
             jsonDict = json.loads(req.text)
@@ -161,9 +161,10 @@ def load_delete():
     req = requests.get(API_URL + "user/pictures", headers={'token': request.cookies.get('token')})
     jsonDict = json.loads(req.text)
     print jsonDict['success']
+    imageUrlArr = []
     for pictures in jsonDict['pictures']:
-        print pictures
-    return render_template('deletePhotos.html')
+        imageUrlArr.append(pictures['url'])
+    return render_template('deletePhotos.html', imageUrlArr = imageUrlArr)
 
 
 
