@@ -70,7 +70,7 @@ func registrationHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if len(reg.Name) == 0 || len(reg.Email) == 0 || len(reg.Password) == 0 {
-		writeError(&w, "invalid json format", 400)
+		writeError(&w, "name, email, and password cannot be empty", 400)
 		return
 	}
 
