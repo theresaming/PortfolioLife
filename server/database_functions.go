@@ -157,6 +157,16 @@ func getPicture(user *User, pictureMask string) (*Picture, error) {
 	return &picture, nil
 }
 
+func deletePictures(user *User, pictureMasks []string) error {
+	db, err := openConnection()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	db.Exec("DELETE FROM pictures WHERE mask IN (?) AND user_id = ?", pictureMasks, user.ID)
+	return nil
+}
+
 func deletePicture(pictureMask string) {
 	db, err := openConnection()
 	if err != nil {

@@ -173,6 +173,17 @@ func pictureDeletionHandler(w http.ResponseWriter, r *http.Request) {
 // Protected DELETE
 func massPictureDeletionHandler(w http.ResponseWriter, r *http.Request) {
 	// TODO: this
+	type pictures struct {
+		Pictures []string
+	}
+
+	auth := r.Header.Get("token")
+	_, ok := getSession(auth)
+	if !ok {
+		writeError(&w, "invalid session, please reload your page", 403)
+		return
+	}
+
 }
 
 func deleteFromS3(path string) error {
