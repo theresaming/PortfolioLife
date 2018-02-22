@@ -113,6 +113,12 @@ var apiRoutes = routes{
 		Validation:  true,
 		HandlerFunc: pictureDeletionHandler,
 	},
+	route{
+		Method:      "DELETE",
+		Pattern:     "/picture/deletes",
+		Validation:  true,
+		HandlerFunc: massPictureDeletionHandler,
+	},
 }
 
 func logHandler(h http.HandlerFunc) http.HandlerFunc {

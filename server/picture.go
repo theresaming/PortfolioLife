@@ -170,6 +170,11 @@ func pictureDeletionHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 }
 
+// Protected DELETE
+func massPictureDeletionHandler(w http.ResponseWriter, r *http.Request) {
+	// TODO: this
+}
+
 func deleteFromS3(path string) error {
 	s3Client, err := minio.New(config.S3Endpoint, config.S3Key, config.S3Secret, true)
 	if err != nil {
