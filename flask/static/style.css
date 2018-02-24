@@ -146,74 +146,22 @@ header div img {
 .home-content {
     margin: 5%;
 }
-
-.imageGrid {
-  line-height: 0;
+.gallery {
+    text-align:center;
 }
-.tile {
-  width:33.33%;
-  /* margin: 5%; */
-  min-height:20em;
-  line-height: 1.2;
-  display:inline-block;
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  overflow: hidden;
-  position: relative;
-
-  color:#fff;
-  text-shadow: 2px 2px 2px #000;
-  cursor: pointer;
-  cursor: hand;
+.thumbnail {
+    width: 200px;
+    height: 200px;
+    overflow: auto;
+    float: left;
+    padding: 10px;
 }
-
-.tile:before {
-  content: '';
-  background-color: rgba(15,15,15,0.5);
-  display: block;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  position: absolute;
-}
-
-.tile:hover:before {
-  display: none;
-}
-
-.tile .textWrapper {
-  text-align: center;
-  vertical-align: middle;
-  width: 80%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: .75em;
-}
-
-.imageGrid .tile .textWrapper .content {
-  display: none;
-}
-
-.imageGrid .tile:hover .textWrapper .content {
-  display: block;
-}
-
-.imageGrid .tile:hover .textWrapper .content h2 {
-  margin: 0;
-}
-
-@media (max-width: 1000px) {
-  .imageGrid .tile {
-    width: 50%;
-  }
-}
-
-@media (max-width: 700px) {
-  .imageGrid .tile {
-    width: 100%;
-  }
+img {
+    border: 1px solid #ddd; /* Gray border */
+    border-radius: 4px;  /* Rounded border */
+    padding: 5px; /* Some padding */
+    width: 150px; /* Set a small width */
+    height: 150px;
+    object-fit: cover;
 
 }
