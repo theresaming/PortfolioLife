@@ -71,6 +71,12 @@ func TestDeletePicture(t *testing.T) {
 	deletePicture(mask)
 }
 
+func TestDeletePictures(t *testing.T) {
+	u := &User{ID: 3}
+
+	deletePictures(u, []string{"2qPYFrubXq2lVEnbcrBKev1hwZb8jbZE", "AfcABMyb_73VDf-B9qeWrg61qaSOWvS6"})
+}
+
 func TestGetPicturesFromUser(t *testing.T) {
 	testUser := &User{
 		ID: 3,
