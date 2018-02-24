@@ -117,7 +117,19 @@ def logout():
 def load_home():
     if session.get('logged_in'):
         token = request.cookies.get('token')
-        return render_template('home.html')
+        # get photos
+        getPhotos = requests.get(API_URL + "user/pictures", headers={'token': token})
+        jsonDict = json.loads(getPhotos.text)
+        print "jsonDict on Home: ", jsonDict
+        pictureUrlArr = []
+        if (jsonDict['success'] == True):
+            pictureUrlArr = []
+            for pictureElements in jsonDict['pictures']:
+                pictureUrlArr.append(pictureElements['url'])
+            print "pictureUrlArr: ", pictureUrlArr
+        else:
+            flash(jsonDict['message'])
+        return render_template('home.html', imageArr = pictureUrlArr)
     else:
         return login()
 
@@ -154,7 +166,7 @@ def upload_file():
                 # call API_URL
                 getPhotos = requests.get(API_URL + "user/pictures", headers={'token': request.cookies.get('token')})
                 photosDict = json.loads(req.getPhotos)
-                
+
                 return render_template('home.html', imageUrl = jsonDict['url'])
                 # return str(req.status_code) + '<br/><br>' + jsonDict['url'] + '<br/><br>' + jsonDict['pictureID']
             else:

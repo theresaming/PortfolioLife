@@ -164,6 +164,7 @@ header div img {
 .photo-col img {
   margin-top: 8px;
   vertical-align: middle;
+  max-width: 100px;
 }
 
 /* Responsive layout - makes a two column-layout instead of four columns */

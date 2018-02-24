@@ -40,10 +40,9 @@
     <div class = "container">
         <div class = "photo-row">
             <div class ="photo-col">
-                <a href="https://placeholder.com"><img src="http://via.placeholder.com/350x150"></a>
-                <a href="https://placeholder.com"><img src="http://via.placeholder.com/200x150"></a>
-                <a href="https://placeholder.com"><img src="http://via.placeholder.com/100x150"></a>
-                <a href="https://placeholder.com"><img src="http://via.placeholder.com/350x200"></a>
+                {% for imageUrl in imageArr %}
+                <a href = ""><img src= "{{imageUrl}}" /></a>
+                {% endfor %}
             </div>
         </div>
     </div>
