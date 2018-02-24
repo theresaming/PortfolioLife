@@ -151,6 +151,10 @@ def upload_file():
                 files = {'file': (filename, f, None, None)})
             jsonDict = json.loads(req.text)
             if jsonDict['success']:
+                # call API_URL
+                getPhotos = requests.get(API_URL + "user/pictures", headers={'token': request.cookies.get('token')})
+                photosDict = json.loads(req.getPhotos)
+                
                 return render_template('home.html', imageUrl = jsonDict['url'])
                 # return str(req.status_code) + '<br/><br>' + jsonDict['url'] + '<br/><br>' + jsonDict['pictureID']
             else:
@@ -160,7 +164,7 @@ def upload_file():
 def load_delete():
     req = requests.get(API_URL + "user/pictures", headers={'token': request.cookies.get('token')})
     jsonDict = json.loads(req.text)
-    print jsonDict['success']
+    # print jsonDict['success']
     imageUrlArr = []
     for pictures in jsonDict['pictures']:
         imageUrlArr.append(pictures['url'])
