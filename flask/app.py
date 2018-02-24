@@ -153,21 +153,14 @@ def upload_file():
             flash('No selected file')
             return redirect(request.url)
         if f and allowed_file(f.filename):
-            #TODO: send to server
-            #SQL injection protector shit
-            # ^ this isn't actually needed
-            # oh it was the secure_filename below i think
             filename = secure_filename(f.filename)
             print request.cookies.get('token')
             req = requests.post(API_URL + "picture/upload", headers={'token': request.cookies.get('token')},
                 files = {'file': (filename, f, None, None)})
             jsonDict = json.loads(req.text)
-            if jsonDict['success']:
-                # call API_URL
-                getPhotos = requests.get(API_URL + "user/pictures", headers={'token': request.cookies.get('token')})
-                photosDict = json.loads(req.getPhotos)
-
-                return render_template('home.html', imageUrl = jsonDict['url'])
+            if jsonDict['success']: # if upload successful
+                flash('Upload successful')
+                return render_template('home.html')
                 # return str(req.status_code) + '<br/><br>' + jsonDict['url'] + '<br/><br>' + jsonDict['pictureID']
             else:
                 return str(req.status_code) + ': ' + jsonDict['message']
@@ -180,7 +173,7 @@ def load_delete():
     imageUrlArr = []
     for pictures in jsonDict['pictures']:
         imageUrlArr.append(pictures['url'])
-    return render_template('deletePhotos.html', imageUrlArr = imageUrlArr)
+    return render_template('deletePhotos.html', imageArr = imageUrlArr)
 
 
 

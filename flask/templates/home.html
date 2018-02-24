@@ -6,44 +6,33 @@
     <p>You're not logged in!</p>
 {% else %}
     <div class = "container">
-        <div class = "row">
-            <div class = "home-content">
+        <div class = "home-content">
+            <div class = "row">
                 <div class = "twelve columns">
                     <h3>Welcome!</h3>
                 </div>
-                <div class = "three columns">
+            </div>
+            <div class = "row">
+                <div class = "six columns">
                     <div class="upload">
                         <a href="{{ url_for('load_upload') }}">Upload Photos</a>
                     </div>
                 </div>
-                <div class = "three columns">
+                <div class = "six columns">
                     <div class="delete">
                         <a href="{{ url_for('load_delete') }}">Delete Photos</a>
                     </div>
                 </div>
-                <div class = "three columns">
-                    <dic class="pictures">
-                        <p>Pictures go here.</p>
-                    </dic>
-                </div>
-                <div class = "three columns">
-                    <div class="albums">
-                        <p>Albums go here.</p>
-                    </div>
-                </div>
             </div>
         </div>
-            <!-- <div>
-                <img src= "{{ imageUrl }}" />
-            </div> -->
     </div>
     <div class = "container">
         <div class = "photo-row">
-            <div class ="photo-col">
-                {% for imageUrl in imageArr %}
-                <a href = ""><img src= "{{imageUrl}}" /></a>
-                {% endfor %}
-            </div>
+            {% for imageUrl in imageArr %}
+                <div class = "photo-col">
+                    <a href = ""><img src= "{{imageUrl}}" /></a>
+                </div>
+            {% endfor %}
         </div>
     </div>
 {% endif %}
