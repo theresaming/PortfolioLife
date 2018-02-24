@@ -100,7 +100,6 @@ html {
     left: 0;
     width: 100%;
     height: 3em;
-    background-color: #335e61;
     margin-top: 56px;
     padding-top: 2px;
 }
@@ -111,11 +110,11 @@ html {
       right: 16px;
       font-size: 1em;
       text-align: right;
-      color: #ffffff;
+      color: #4A4A4A;
       font-family: 'Quicksand', sans-serif;
 }
 /* Image gallery stylezzzzzzz */
-header {
+/* header {
   padding: .5vw;
   font-size: 0;
   display: -ms-flexbox;
@@ -141,44 +140,80 @@ header div img {
   header div { margin: 0; }
   header { padding: 0; }
 
-}
+} */
 
 /* Home page styles */
 .home-content {
     margin: 5%;
 }
 
-.photo-row {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 0 4px;
+.imageGrid {
+  line-height: 0;
+}
+.tile {
+  width:33.33%;
+  /* margin: 5%; */
+  min-height:20em;
+  line-height: 1.2;
+  display:inline-block;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  position: relative;
+
+  color:#fff;
+  text-shadow: 2px 2px 2px #000;
+  cursor: pointer;
+  cursor: hand;
 }
 
-/* Create four equal columns that sits next to each other */
-.photo-col {
-  flex: 25%;
-  max-width: 25%;
-  padding: 0 4px;
+.tile:before {
+  content: '';
+  background-color: rgba(15,15,15,0.5);
+  display: block;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  position: absolute;
 }
 
-.photo-col img {
-  margin-top: 8px;
+.tile:hover:before {
+  display: none;
+}
+
+.tile .textWrapper {
+  text-align: center;
   vertical-align: middle;
-  max-width: 100px;
+  width: 80%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: .75em;
 }
 
-/* Responsive layout - makes a two column-layout instead of four columns */
-@media (max-width: 800px) {
-  .photo-col {
-    flex: 50%;
-    max-width: 50%;
+.imageGrid .tile .textWrapper .content {
+  display: none;
+}
+
+.imageGrid .tile:hover .textWrapper .content {
+  display: block;
+}
+
+.imageGrid .tile:hover .textWrapper .content h2 {
+  margin: 0;
+}
+
+@media (max-width: 1000px) {
+  .imageGrid .tile {
+    width: 50%;
   }
 }
 
-/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
-@media (max-width: 600px) {
-  .photo-col {
-    flex: 100%;
-    max-width: 100%;
+@media (max-width: 700px) {
+  .imageGrid .tile {
+    width: 100%;
   }
+
 }
