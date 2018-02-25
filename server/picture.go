@@ -111,7 +111,7 @@ func pictureRetrievalHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	pic, err := getPicture(s.user, pictureID)
+	pic, err := getPicture(s.user, pictureID, true)
 	if err != nil {
 		writeError(&w, "this picture does not exist", 410)
 		return
@@ -150,7 +150,7 @@ func pictureDeletionHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	pic, err := getPicture(s.user, pictureID)
+	pic, err := getPicture(s.user, pictureID, true)
 	if err != nil {
 		writeError(&w, "you cannot access this resource", 401)
 		return
@@ -178,11 +178,37 @@ func massPictureDeletionHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	auth := r.Header.Get("token")
-	_, ok := getSession(auth)
+	s, ok := getSession(auth)
 	if !ok {
 		writeError(&w, "invalid session, please reload your page", 403)
 		return
 	}
+	pics := &pictures{}
+	defer r.Body.Close()
+
+	if err := json.NewDecoder(r.Body).Decode(&pics); err != nil {
+		writeError(&w, "invalid json format", 400)
+		return
+	}
+
+	toDelete, err := getPictures(s.user, pics.Pictures, false)
+	if err != nil {
+		// TODO: fix this error msg and code
+		writeError(&w, "invalid json format", 400)
+		return
+	}
+	deletePictures(s.user, toDelete)
+	deleteMultipleFromS3(toDelete)
+
+	resp := jsonResponse{
+		Success: true,
+	}
+	data, err := json.Marshal(resp)
+	if err != nil {
+		panic(err)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(data)
 
 }
 
@@ -192,6 +218,24 @@ func deleteFromS3(path string) error {
 		return err
 	}
 	return s3Client.RemoveObject(config.S3SpaceName, path)
+}
+
+func deleteMultipleFromS3(pictures []Picture) error {
+	s3Client, err := minio.New(config.S3Endpoint, config.S3Key, config.S3Secret, true)
+	if err != nil {
+		return err
+	}
+	toDelete := make(chan string)
+	go func() {
+		for _, pic := range pictures {
+			fmt.Println("Attempting to delete ", pic.ImagePath)
+			toDelete <- pic.ImagePath
+		}
+		for err := range s3Client.RemoveObjects(config.S3SpaceName, toDelete) {
+			l.Printf("Error during deletion: %s\n", err)
+		}
+	}()
+	return nil
 }
 
 // TODO: change filename on the server in case duplicate names get uploaded!

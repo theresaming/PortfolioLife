@@ -123,7 +123,8 @@ func saveUser(user *User) {
 ********************/
 
 // This will refresh the validURL if ExpirationTime < now + 10 minutes
-func getPicture(user *User, pictureMask string) (*Picture, error) {
+// when refresh is set to true
+func getPicture(user *User, pictureMask string, refresh bool) (*Picture, error) {
 	db, err := openConnection()
 	if err != nil {
 		panic(err)
@@ -144,7 +145,7 @@ func getPicture(user *User, pictureMask string) (*Picture, error) {
 		return nil, fmt.Errorf("no picture found for your user session")
 	}
 	picture = user2.Pictures[0]
-	if picture.ExpirationTime.Before(goodTime) {
+	if picture.ExpirationTime.Before(goodTime) && refresh {
 		url, err := refreshURL(&picture)
 		if err != nil {
 			panic(err)
@@ -157,12 +158,50 @@ func getPicture(user *User, pictureMask string) (*Picture, error) {
 	return &picture, nil
 }
 
-func deletePictures(user *User, pictureMasks []string) error {
+func getPictures(user *User, pictureMasks []string, refresh bool) ([]Picture, error) {
 	db, err := openConnection()
 	if err != nil {
 		panic(err)
 	}
 	defer db.Close()
+	goodTime := time.Now().Add(10 * time.Minute)
+	var (
+		user2 User
+	)
+	db.Where("id = ?", user.ID).Preload("Pictures", "mask IN (?)", pictureMasks).First(&user2)
+
+	if len(user2.Pictures) == 0 {
+		return nil, fmt.Errorf("no picture found for your user session")
+	}
+	if refresh {
+		for _, picture := range user2.Pictures {
+			if picture.ExpirationTime.Before(goodTime) && refresh {
+				url, err := refreshURL(&picture)
+				if err != nil {
+					panic(err)
+				}
+				picture.ValidURL = url
+				picture.ExpirationTime = time.Now().Add(urlExpirationDuration)
+				db.Save(&picture)
+			}
+		}
+	}
+
+	return user2.Pictures, nil
+}
+
+func deletePictures(user *User, pictures []Picture) error {
+	db, err := openConnection()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	pictureMasks := make([]string, len(pictures))
+	i := 0
+	for _, p := range pictures {
+		pictureMasks[i] = p.Mask
+		i++
+	}
 	db.Exec("DELETE FROM pictures WHERE mask IN (?) AND user_id = ?", pictureMasks, user.ID)
 	return nil
 }

@@ -59,7 +59,7 @@ func TestGetPicture(t *testing.T) {
 	u, _ := getUserFromEmail("paul@paul.com")
 	mask := "mask3v2"
 
-	pic, err := getPicture(u, mask)
+	pic, err := getPicture(u, mask, true)
 	if err != nil {
 		panic(err)
 	}
@@ -72,9 +72,9 @@ func TestDeletePicture(t *testing.T) {
 }
 
 func TestDeletePictures(t *testing.T) {
-	u := &User{ID: 3}
+	//u := &User{ID: 3}
 
-	deletePictures(u, []string{"2qPYFrubXq2lVEnbcrBKev1hwZb8jbZE", "AfcABMyb_73VDf-B9qeWrg61qaSOWvS6"})
+	//deletePictures(u, []string{"2qPYFrubXq2lVEnbcrBKev1hwZb8jbZE", "AfcABMyb_73VDf-B9qeWrg61qaSOWvS6"})
 }
 
 func TestGetPicturesFromUser(t *testing.T) {
@@ -90,6 +90,16 @@ func TestGetPicturesFromUser(t *testing.T) {
 	for _, pic := range pictures {
 		fmt.Println(pic.Mask)
 	}
+}
+
+func TestGetPictures(t *testing.T) {
+	testUser := &User{ID: 3}
+
+	pictures, err := getPictures(testUser, []string{"hu8Lx3dbF5bqDRlDOcssmbXjzOoqF43p", "M4AXad_fjpynNSyS0oJN0Qp9QwPZVV0X"}, false)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(pictures)
 }
 
 func init() {
