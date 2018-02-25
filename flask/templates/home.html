@@ -35,19 +35,25 @@
             </div>
         </div>
         <div class = "row">
-                {% for imageUrl in imageArr %}
-                    <div class = "thumbnail">
-                            <a class="venobox" data-gall="myGallery" href="{{imageUrl}}">
-                                <img src="{{imageUrl}}"/>
-                            </a>
-                    </div>
-                {% endfor %}
+                <ul class = "photo-grid">
+                    {% for imageUrl in imageArr %}
+                        <div class = "thumbnail">
+                            <li class = "image-element">
+                                <!-- <i class="fas fa-check"></i> -->
+                                <a class="venobox" data-gall="myGallery" href="{{imageUrl}}">
+                                    <img src="{{imageUrl}}"/>
+                                </a>
+                            </li>
+                        </div>
+                    {% endfor %}
+                </ul>
         </div>
     </div>
 
 {% endif %}
 <script src="/static/bower_components/jquery/dist/jquery.js"></script>
 <script src="/static/scripts/venobox.min.js"></script>
+<script src="/static/scripts/fontawesome-all.js"></script>
 
 <script>
 $(document).ready(function(){
