@@ -6,37 +6,61 @@
     <p>You're not logged in!</p>
 {% else %}
     <div class = "container">
-        <div class = "row">
-            <div class = "home-content">
+        <div class = "home-content">
+            <div class = "row">
                 <div class = "twelve columns">
                     <h3>Welcome!</h3>
                 </div>
-                <div class = "three columns">
+            </div>
+            <div class = "row">
+                <div class = "six columns">
                     <div class="upload">
                         <a href="{{ url_for('load_upload') }}">Upload Photos</a>
                     </div>
                 </div>
-                <div class = "three columns">
+                <div class = "six columns">
                     <div class="delete">
                         <a href="{{ url_for('load_delete') }}">Delete Photos</a>
                     </div>
                 </div>
-                <div class = "three columns">
-                    <dic class="pictures">
-                        <p>Pictures go here.</p>
-                    </dic>
-                </div>
-                <div class = "three columns">
-                    <div class="albums">
-                        <p>Albums go here.</p>
-                    </div>
+            </div>
+        </div>
+    </div>
+    <div class = "container">
+        <div class = "row">
+            <div class = "twelve columns">
+                <div class = "select-activate">
+                    <button class="button-primary" id="select-photo">Select Photos</button>
                 </div>
             </div>
         </div>
-            <!-- <div>
-                <img src= "{{ imageUrl }}" />
-            </div> -->
+        <div class = "row">
+                {% for imageUrl in imageArr %}
+                    <div class = "thumbnail">
+                            <a class="venobox" data-gall="myGallery" href="{{imageUrl}}">
+                                <img src="{{imageUrl}}"/>
+                            </a>
+                    </div>
+                {% endfor %}
+        </div>
     </div>
-{% endif %}
 
+{% endif %}
+<script src="/static/bower_components/jquery/dist/jquery.js"></script>
+<script src="/static/scripts/venobox.min.js"></script>
+
+<script>
+$(document).ready(function(){
+    $('.venobox').venobox();
+});
+
+window.onload = function() {
+    var select = document.getElementById("select-photo");
+    select.onclick=function() {
+        var thumb = document.getElementsByClassName("thumbnail");
+        // console.log(thumb[0]);
+
+    }
+}
+</script>
 {% endblock %}

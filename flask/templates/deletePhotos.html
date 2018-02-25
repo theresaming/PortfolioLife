@@ -10,10 +10,12 @@
             </p>
         </div>
     </div>
-    <div class = "row">
-        <div class = "twelve columns">
-            {% for imageUrl in imageUrlArr %}
-            <img src= "{{imageUrl}}" />
+    <div class = "container">
+        <div class = "photo-row">
+            {% for imageUrl in imageArr %}
+                <div class = "photo-col">
+                    <a href = ""><img src= "{{imageUrl}}" /></a>
+                </div>
             {% endfor %}
         </div>
     </div>

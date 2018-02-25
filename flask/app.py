@@ -117,7 +117,19 @@ def logout():
 def load_home():
     if session.get('logged_in'):
         token = request.cookies.get('token')
-        return render_template('home.html')
+        # get photos
+        getPhotos = requests.get(API_URL + "user/pictures", headers={'token': token})
+        jsonDict = json.loads(getPhotos.text)
+        # print "jsonDict on Home: ", jsonDict
+        pictureUrlArr = []
+        if (jsonDict['success'] == True):
+            pictureUrlArr = []
+            for pictureElements in jsonDict['pictures']:
+                pictureUrlArr.append(pictureElements['url'])
+            # print "pictureUrlArr: ", pictureUrlArr
+        else:
+            flash(jsonDict['message'])
+        return render_template('home.html', imageArr = pictureUrlArr)
     else:
         return login()
 
@@ -141,17 +153,14 @@ def upload_file():
             flash('No selected file')
             return redirect(request.url)
         if f and allowed_file(f.filename):
-            #TODO: send to server
-            #SQL injection protector shit
-            # ^ this isn't actually needed
-            # oh it was the secure_filename below i think
             filename = secure_filename(f.filename)
-            print request.cookies.get('token')
+            # print request.cookies.get('token')
             req = requests.post(API_URL + "picture/upload", headers={'token': request.cookies.get('token')},
                 files = {'file': (filename, f, None, None)})
             jsonDict = json.loads(req.text)
-            if jsonDict['success']:
-                return render_template('home.html', imageUrl = jsonDict['url'])
+            if jsonDict['success']: # if upload successful
+                flash('Upload successful')
+                return render_template('home.html')
                 # return str(req.status_code) + '<br/><br>' + jsonDict['url'] + '<br/><br>' + jsonDict['pictureID']
             else:
                 return str(req.status_code) + ': ' + jsonDict['message']
@@ -160,11 +169,11 @@ def upload_file():
 def load_delete():
     req = requests.get(API_URL + "user/pictures", headers={'token': request.cookies.get('token')})
     jsonDict = json.loads(req.text)
-    print jsonDict['success']
+    # print jsonDict['success']
     imageUrlArr = []
     for pictures in jsonDict['pictures']:
         imageUrlArr.append(pictures['url'])
-    return render_template('deletePhotos.html', imageUrlArr = imageUrlArr)
+    return render_template('deletePhotos.html', imageArr = imageUrlArr)
 
 
 
