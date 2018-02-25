@@ -149,7 +149,7 @@ def upload_file():
             jsonDict = json.loads(req.text)
             if jsonDict['success']: # if upload successful
                 flash('Upload successful')
-                return render_template('home.html')
+                return load_home();
                 # return str(req.status_code) + '<br/><br>' + jsonDict['url'] + '<br/><br>' + jsonDict['pictureID']
             else:
                 return str(req.status_code) + ': ' + jsonDict['message']
