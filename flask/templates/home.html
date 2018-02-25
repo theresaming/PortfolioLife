@@ -28,33 +28,39 @@
     </div>
     <div class = "container">
         <div class = "row">
+            <div class = "twelve columns">
+                <div class = "select-activate">
+                    <button class="button-primary" id="select-photo">Select Photos</button>
+                </div>
+            </div>
+        </div>
+        <div class = "row">
                 {% for imageUrl in imageArr %}
                     <div class = "thumbnail">
-                        <a class="venobox" data-gall="myGallery" href="{{imageUrl}}">
-                            <img src="{{imageUrl}}"/>
-                        </a>
+                            <a class="venobox" data-gall="myGallery" href="{{imageUrl}}">
+                                <img src="{{imageUrl}}"/>
+                            </a>
                     </div>
                 {% endfor %}
         </div>
     </div>
-    <!-- <div class="imageGrid">
-        {% for imageUrl in imageArr %}
-            <div class = "tile" style="background-image: url('{{imageUrl}}');">
-                <div class="textWrapper"><h2>Image Title</h2>
-                  <div class="content">comment text</div>
-                </div>
-                <div class="other">comment text</div>
-
-            </div>
-        {% endfor %}
-    </div> -->
 
 {% endif %}
 <script src="/static/bower_components/jquery/dist/jquery.js"></script>
 <script src="/static/scripts/venobox.min.js"></script>
+
 <script>
 $(document).ready(function(){
     $('.venobox').venobox();
 });
+
+window.onload = function() {
+    var select = document.getElementById("select-photo");
+    select.onclick=function() {
+        var thumb = document.getElementsByClassName("thumbnail");
+        // console.log(thumb[0]);
+
+    }
+}
 </script>
 {% endblock %}

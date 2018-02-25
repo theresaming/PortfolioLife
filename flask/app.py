@@ -120,13 +120,13 @@ def load_home():
         # get photos
         getPhotos = requests.get(API_URL + "user/pictures", headers={'token': token})
         jsonDict = json.loads(getPhotos.text)
-        print "jsonDict on Home: ", jsonDict
+        # print "jsonDict on Home: ", jsonDict
         pictureUrlArr = []
         if (jsonDict['success'] == True):
             pictureUrlArr = []
             for pictureElements in jsonDict['pictures']:
                 pictureUrlArr.append(pictureElements['url'])
-            print "pictureUrlArr: ", pictureUrlArr
+            # print "pictureUrlArr: ", pictureUrlArr
         else:
             flash(jsonDict['message'])
         return render_template('home.html', imageArr = pictureUrlArr)
@@ -154,7 +154,7 @@ def upload_file():
             return redirect(request.url)
         if f and allowed_file(f.filename):
             filename = secure_filename(f.filename)
-            print request.cookies.get('token')
+            # print request.cookies.get('token')
             req = requests.post(API_URL + "picture/upload", headers={'token': request.cookies.get('token')},
                 files = {'file': (filename, f, None, None)})
             jsonDict = json.loads(req.text)
