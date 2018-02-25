@@ -26,14 +26,16 @@
             </div>
         </div>
     </div>
-    <div class = "gallery">
-        {% for imageUrl in imageArr %}
-            <div class = "thumbnail">
-                <a class="venobox" data-gall="myGallery" href="{{imageUrl}}">
-                    <img src="{{imageUrl}}"/>
-                </a>
-            </div>
-        {% endfor %}
+    <div class = "container">
+        <div class = "row">
+                {% for imageUrl in imageArr %}
+                    <div class = "thumbnail">
+                        <a class="venobox" data-gall="myGallery" href="{{imageUrl}}">
+                            <img src="{{imageUrl}}"/>
+                        </a>
+                    </div>
+                {% endfor %}
+        </div>
     </div>
     <!-- <div class="imageGrid">
         {% for imageUrl in imageArr %}
@@ -54,14 +56,5 @@
 $(document).ready(function(){
     $('.venobox').venobox();
 });
-$('.venobox_custom').venobox({
-        framewidth: '400px',        // default: ''
-        frameheight: '300px',       // default: ''
-        border: '10px',             // default: '0'
-        bgcolor: '#5dff5e',         // default: '#fff'
-        titleattr: 'data-title',    // default: 'title'
-        numeratio: true,            // default: false
-        infinigall: true            // default: false
-    });
 </script>
 {% endblock %}

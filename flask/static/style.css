@@ -113,34 +113,6 @@ html {
       color: #4A4A4A;
       font-family: 'Quicksand', sans-serif;
 }
-/* Image gallery stylezzzzzzz */
-/* header {
-  padding: .5vw;
-  font-size: 0;
-  display: -ms-flexbox;
-  -ms-flex-wrap: wrap;
-  -ms-flex-direction: column;
-  -webkit-flex-flow: row wrap;
-  flex-flow: row wrap;
-  display: -webkit-box;
-  display: flex;
-}
-header div {
-  -webkit-box-flex: auto;
-  -ms-flex: auto;
-  flex: auto;
-  width: 200px;
-  margin: .5vw;
-}
-header div img {
-  width: 100%;
-  height: auto;
-}
-@media screen and (max-width: 400px) {
-  header div { margin: 0; }
-  header { padding: 0; }
-
-} */
 
 /* Home page styles */
 .home-content {
@@ -152,16 +124,22 @@ header div img {
 .thumbnail {
     width: 200px;
     height: 200px;
-    overflow: auto;
+    overflow: hidden;
     float: left;
     padding: 10px;
+    position: relative;
 }
 img {
-    border: 1px solid #ddd; /* Gray border */
-    border-radius: 4px;  /* Rounded border */
-    padding: 5px; /* Some padding */
-    width: 150px; /* Set a small width */
-    height: 150px;
-    object-fit: cover;
+    max-width :100%;
+    max-height: 100%;
 
+}
+
+@media (min-width: 400px) {
+    .thumbnail {
+        position: relative;
+        overflow: hidden;
+        float: left;
+        padding: 10px;
+    }
 }
