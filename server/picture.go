@@ -228,6 +228,7 @@ func deleteMultipleFromS3(pictures []Picture) error {
 	toDelete := make(chan string)
 	go func() {
 		for _, pic := range pictures {
+			fmt.Println("Attempting to delete ", pic.ImagePath)
 			toDelete <- pic.ImagePath
 		}
 		for err := range s3Client.RemoveObjects(config.S3SpaceName, toDelete) {
