@@ -30,7 +30,8 @@
         <div class = "row">
             <div class = "twelve columns">
                 <div class = "select-activate">
-                    <button class="button-primary" id="select-photo">Select Photos</button>
+                    <button class="button-primary" id="select-photo" onclick="runSelect()">Select Photos</button>
+                    <button class="button" id="activate-gallery" onclick="runGallery()">Run Gallery</button>
                 </div>
             </div>
         </div>
@@ -39,8 +40,8 @@
                     {% for imageUrl in imageArr %}
                         <div class = "thumbnail">
                             <li class = "image-element">
-                                <!-- <i class="fas fa-check"></i> -->
-                                <a class="venobox" data-gall="myGallery" href="{{imageUrl}}">
+                                <a class="venobox" data-gall="myGallery" href= "#" data-href="{{imageUrl}}">
+                                    <i class="fas fa-check-circle" style="color: #5bb56c;display:none"></i>
                                     <img src="{{imageUrl}}"/>
                                 </a>
                             </li>
@@ -58,15 +59,15 @@
 <script>
 $(document).ready(function(){
     $('.venobox').venobox();
+
 });
+function runSelect(venobox) {
+    var test = $('.venobox').venobox();
+    test.removeData();
+}
 
-window.onload = function() {
-    var select = document.getElementById("select-photo");
-    select.onclick=function() { //if you click the select-photo button
-        var thumb = document.getElementsByClassName("thumbnail");
-        // console.log(thumb[0]);
-
-    }
+function runGallery() {
+    $('.venobox').venobox();
 }
 </script>
 {% endblock %}

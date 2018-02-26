@@ -153,6 +153,14 @@ html {
     filter: alpha(opacity=100); /* For IE8 and earlier */
 }
 
+.thumbnail i {
+    display: none;
+}
+
+ul li.selected {
+    border: 2px solid #000;
+}
+
 @media (min-width: 400px) {
     .thumbnail {
         position: relative;
