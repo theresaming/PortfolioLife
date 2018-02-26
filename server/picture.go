@@ -170,11 +170,10 @@ func pictureDeletionHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 }
 
-// Protected DELETE
+// Protected POST
 func massPictureDeletionHandler(w http.ResponseWriter, r *http.Request) {
-	// TODO: this
 	type pictures struct {
-		Pictures []string
+		Pictures []string `json:"pictureIDs"`
 	}
 
 	auth := r.Header.Get("token")
@@ -202,6 +201,7 @@ func massPictureDeletionHandler(w http.ResponseWriter, r *http.Request) {
 
 	resp := jsonResponse{
 		Success: true,
+		Message: "deleted photos",
 	}
 	data, err := json.Marshal(resp)
 	if err != nil {
@@ -227,14 +227,14 @@ func deleteMultipleFromS3(pictures []Picture) error {
 	}
 	toDelete := make(chan string)
 	go func() {
+		defer close(toDelete)
 		for _, pic := range pictures {
-			fmt.Println("Attempting to delete ", pic.ImagePath)
 			toDelete <- pic.ImagePath
 		}
-		for err := range s3Client.RemoveObjects(config.S3SpaceName, toDelete) {
-			l.Printf("Error during deletion: %s\n", err)
-		}
 	}()
+	for err := range s3Client.RemoveObjects(config.S3SpaceName, toDelete) {
+		l.Printf("Error during deletion: %s\n", err)
+	}
 	return nil
 }
 

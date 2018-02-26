@@ -15,7 +15,13 @@ func TestDeletePictureFromS3(t *testing.T) {
 func TestDeletePicturesFromS3(t *testing.T) {
 	pics := []Picture{
 		Picture{
-			ImagePath: "users/3/buzz.png",
+			ImagePath: "users/3/.gitignore",
+		},
+		Picture{
+			ImagePath: "users/3/DBSchema_v1.png",
+		},
+		Picture{
+			ImagePath: "users/3/Leekspin.gif",
 		},
 	}
 	err := deleteMultipleFromS3(pics)
@@ -23,5 +29,5 @@ func TestDeletePicturesFromS3(t *testing.T) {
 		panic(err)
 	}
 
-	<-time.After(10 * time.Second)
+	<-time.After(3 * time.Second)
 }

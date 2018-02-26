@@ -114,7 +114,7 @@ var apiRoutes = routes{
 		HandlerFunc: pictureDeletionHandler,
 	},
 	route{
-		Method:      "DELETE",
+		Method:      "POST",
 		Pattern:     "/picture/deletes",
 		Validation:  true,
 		HandlerFunc: massPictureDeletionHandler,
