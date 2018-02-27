@@ -135,7 +135,7 @@ def allowed_file(filename):
 @app.route('/uploader', methods = ['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        f = request.files['files']
+        f = request.files['file']
         # saves files locally
         # f.save(secure_filename(f.filename))
         if f.filename == '':
@@ -145,10 +145,10 @@ def upload_file():
             filename = secure_filename(f.filename)
             # print request.cookies.get('token')
             req = requests.post(API_URL + "picture/upload", headers={'token': request.cookies.get('token')},
-                files = {'file': (filename, f, None, None)})
+                files = {'files': (filename, f, None, None)})
             jsonDict = json.loads(req.text)
             if jsonDict['success']: # if upload successful
-                return load_home();
+                return load_home()
             else:
                 return str(req.status_code) + ': ' + jsonDict['message']
 
