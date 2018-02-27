@@ -135,7 +135,7 @@ def allowed_file(filename):
 @app.route('/uploader', methods = ['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        f = request.files['file']
+        f = request.files['files']
         # saves files locally
         # f.save(secure_filename(f.filename))
         if f.filename == '':
