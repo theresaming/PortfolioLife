@@ -187,6 +187,7 @@ or at least read this note: http://i.imgur.com/7C0ws9e.gif
     position: relative;
     overflow: hidden;
     padding: 20px 10px;
+    /* max-height: 100%; */
 }
 .vbox-container img{
     max-width: 100%;

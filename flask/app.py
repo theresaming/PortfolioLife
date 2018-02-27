@@ -10,15 +10,6 @@ app.secret_key = os.urandom(12)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://jd:jd2018@67.205.168.129/junior_design'
 
-
-# allowed image type initialization WHOOOWHEEEEEE
-# ALLOWED_EXTENSIONS = ['jpg', 'jpeg', 'png']
-# FILE_CONTENT_TYPES = { # these will be used to set the content type of S3 object. It is binary by default.
-#     'jpg': 'image/jpeg',
-#     'jpeg': 'image/jpeg',
-#     'png': 'image/png'
-# }
-
 API_URL = "http://67.205.168.129:8080/"
 
 class RegistrationForm(Form):
@@ -28,7 +19,7 @@ class RegistrationForm(Form):
         validators.DataRequired(),
         validators.EqualTo('confirm', message='Passwords must match')
     ], description = "password")
-    confirm = PasswordField('Confirm Password', description = "confirm password")
+    confirm = PasswordField('Confirm Password', description = "Confirm password")
 
 app.config['OAUTH_CREDENTIALS'] = {
     'facebook': {
@@ -40,7 +31,6 @@ app.config['OAUTH_CREDENTIALS'] = {
         'secret': 'QpD_M7SzNVpmMVNPXTrJmy1m'
     }
 }
-
 
 @app.route('/')
 def login():
@@ -107,7 +97,6 @@ def register():
 def logout():
     session['logged_in'] = False
     requests.post(API_URL + "user/logout", headers={'token': request.cookies.get('token')})
-
     resp = make_response(redirect('/'))
     resp.set_cookie('token', '', expires=0)
     return resp
@@ -117,16 +106,16 @@ def logout():
 def load_home():
     if session.get('logged_in'):
         token = request.cookies.get('token')
-        # get photos
+        # Get photos from API
         getPhotos = requests.get(API_URL + "user/pictures", headers={'token': token})
         jsonDict = json.loads(getPhotos.text)
-        # print "jsonDict on Home: ", jsonDict
+
         pictureUrlArr = []
+        # Add photos to array
         if (jsonDict['success'] == True):
             pictureUrlArr = []
             for pictureElements in jsonDict['pictures']:
                 pictureUrlArr.append(pictureElements['url'])
-            # print "pictureUrlArr: ", pictureUrlArr
         else:
             flash(jsonDict['message'])
         return render_template('home.html', imageArr = pictureUrlArr)
@@ -159,9 +148,7 @@ def upload_file():
                 files = {'file': (filename, f, None, None)})
             jsonDict = json.loads(req.text)
             if jsonDict['success']: # if upload successful
-                flash('Upload successful')
-                return render_template('home.html')
-                # return str(req.status_code) + '<br/><br>' + jsonDict['url'] + '<br/><br>' + jsonDict['pictureID']
+                return load_home();
             else:
                 return str(req.status_code) + ': ' + jsonDict['message']
 
