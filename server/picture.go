@@ -39,53 +39,61 @@ func pictureUploadHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	file, handler, err := r.FormFile("file")
-	if err != nil {
-		l.Println(err.Error())
-		writeError(&w, "error getting photo data", 400)
-		return
+	files := r.MultipartForm.File["files"]
+	type photoMeta struct {
+		URL  string `json:"url"`
+		Mask string `json:"pictureID"`
 	}
+	photos := make([]photoMeta, len(files))
+	var i = 0
+	for _, fileHeader := range files {
+		f, err := os.OpenFile(fileHeader.Filename, os.O_CREATE|os.O_RDWR, 0666)
+		if err != nil {
+			panic(err)
+		}
+		file, err := fileHeader.Open()
+		if err != nil {
+			l.Println(err)
+			writeError(&w, "invalid photo data", 400)
+			return
+		}
+		io.Copy(f, file)
+		defer func() {
+			path := f.Name()
+			f.Close()
+			os.Remove(path)
+		}()
 
-	defer file.Close()
-
-	f, err := os.OpenFile(handler.Filename, os.O_CREATE|os.O_RDWR, 0666)
-	if err != nil {
-		panic(err)
+		// Upload to S3, then return a message w/ link
+		url, bucketPath, err := uploadToS3(f.Name(), s)
+		if err != nil {
+			// TODO: make this graceful
+			panic(err)
+		}
+		// TODO: check for mask collisions and retry with a new random generation!
+		mask := generateRandomString(32)
+		picture := Picture{
+			ImagePath:      bucketPath,
+			Mask:           mask,
+			ValidURL:       url,
+			ExpirationTime: time.Now().Add(urlExpirationDuration),
+		}
+		s.user.Pictures = append(s.user.Pictures, picture)
+		photos[i] = photoMeta{
+			URL:  url,
+			Mask: mask,
+		}
+		i++
 	}
-	io.Copy(f, file)
-	defer func() {
-		path := f.Name()
-		f.Close()
-		os.Remove(path)
-	}()
-
-	// Upload to S3, then return a message w/ link
-	url, bucketPath, err := uploadToS3(f.Name(), s)
-	if err != nil {
-		// TODO: make this graceful
-		panic(err)
-	}
-	// TODO: check for mask collisions and retry with a new random generation!
-	mask := generateRandomString(32)
-	picture := Picture{
-		ImagePath:      bucketPath,
-		Mask:           mask,
-		ValidURL:       url,
-		ExpirationTime: time.Now().Add(urlExpirationDuration),
-	}
-	s.user.Pictures = append(s.user.Pictures, picture)
 	saveUser(s.user)
-
 	resp := struct {
 		*jsonResponse
-		URL       string `json:"url"`
-		PictureID string `json:"pictureID"`
+		Pictures []photoMeta `json:"pictures"`
 	}{
 		&jsonResponse{
 			Success: true,
 		},
-		url,
-		mask,
+		photos,
 	}
 	data, err := json.Marshal(resp)
 	if err != nil {
