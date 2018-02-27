@@ -269,6 +269,23 @@ func getUsersPicturesAndRefreshURL(user *User, limit int, page int) (pictures []
 	return pictures, page, maxPages
 }
 
+/**********
+*		  *
+* Tagging *
+*		  *
+**********/
+
+func savePictureTags(picture *Picture) {
+	db, err := openConnection()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	// TODO continue here
+	db.Create(&picture.Tags)
+	db.Exec("INSERT INTO `tags` (picture, tag) VALUES (?);", picture.Tags)
+}
+
 /****************
 *				*
 * Miscellaneous *

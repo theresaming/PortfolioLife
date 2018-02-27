@@ -119,6 +119,20 @@ var apiRoutes = routes{
 		Validation:  true,
 		HandlerFunc: massPictureDeletionHandler,
 	},
+
+	// Tag routes
+	route{
+		Method:      "POST",
+		Pattern:     "/picture/{pictureID}/tag",
+		Validation:  true,
+		HandlerFunc: addTagHandler,
+	},
+	route{
+		Method:      "DELETE",
+		Pattern:     "/picture/{pictureID}/tag",
+		Validation:  true,
+		HandlerFunc: removeTagHandler,
+	},
 }
 
 func logHandler(h http.HandlerFunc) http.HandlerFunc {
