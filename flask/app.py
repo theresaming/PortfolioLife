@@ -143,7 +143,7 @@ def upload_file():
             return redirect(request.url)
         if f and allowed_file(f.filename):
             filename = secure_filename(f.filename)
-            # print request.cookies.get('token')
+            print request.cookies.get('token')
             req = requests.post(API_URL + "picture/upload", headers={'token': request.cookies.get('token')},
                 files = {'files': (filename, f, None, None)})
             jsonDict = json.loads(req.text)
