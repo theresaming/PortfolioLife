@@ -22,8 +22,8 @@ ul {
 
 /* Header CSS */
 .title-bar {
-    z-index: -1;
-    position: fixed;
+    z-index: 2147000000;
+    /* position: fixed; */
     top: 0;
     left: 0;
     width: 100%;
@@ -35,6 +35,7 @@ ul {
 
 .title-text {
     position: absolute;
+    z-index: 2147000000;
     top: 8px;
     left: 16px;
     font-size: 32px;
