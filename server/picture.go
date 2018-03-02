@@ -115,7 +115,7 @@ func pictureRetrievalHandler(w http.ResponseWriter, r *http.Request) {
 
 	s, ok := getSession(auth)
 	if !ok {
-		writeError(&w, "invalid session, please reload your page", 403)
+		writeError(&w, "invalid session, please reload your page", 401)
 		return
 	}
 
@@ -154,7 +154,7 @@ func pictureDeletionHandler(w http.ResponseWriter, r *http.Request) {
 
 	s, ok := getSession(auth)
 	if !ok {
-		writeError(&w, "invalid session, please reload your page", 403)
+		writeError(&w, "invalid session, please reload your page", 401)
 		return
 	}
 
@@ -187,7 +187,7 @@ func massPictureDeletionHandler(w http.ResponseWriter, r *http.Request) {
 	auth := r.Header.Get("token")
 	s, ok := getSession(auth)
 	if !ok {
-		writeError(&w, "invalid session, please reload your page", 403)
+		writeError(&w, "invalid session, please reload your page", 401)
 		return
 	}
 	pics := &pictures{}

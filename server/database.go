@@ -25,15 +25,16 @@ type User struct {
 	Oauth     int            `gorm:"size:11"`
 	Token     sql.NullString `gorm:"type:varchar(32);unique"`
 
-	Pictures []Picture
+	Pictures []Picture `gorm:"foreignkey:UserID"`
 }
 
 // A Picture is data about an uploaded photo
 type Picture struct {
 	CreatedAt time.Time
-	UserID    uint   `gorm:"primary_key;size:11;index"`
-	ImagePath string `gorm:"type:varchar(512)" json:"path"`       // Path to image in S3 Bucket
-	Mask      string `gorm:"primary_key;unique;type:varchar(32)"` // portfoliolife.com/picture/mask
+	PictureID uint   `gorm:"primary_key;size:11;index;AUTO_INCREMENT:true;"`
+	UserID    uint   `gorm:"size:11;AUTO_INCREMENT:false"`
+	ImagePath string `gorm:"type:varchar(512)" json:"path"` // Path to image in S3 Bucket
+	Mask      string `gorm:"unique;type:varchar(32)"`       // portfoliolife.com/picture/mask
 	// The mask acts as a key of sorts
 
 	ValidURL       string `gorm:"type:varchar(1024)"`
@@ -43,9 +44,16 @@ type Picture struct {
 
 	Albums []Album `gorm:"many2many:picture_in_album;AssociationForeignKey:albumID;ForeignKey:pictureID;"`
 
-	Tags []Tag
+	Tags []Tag `gorm:"foreignkey:PictureID"`
 
 	PictureShare PictureShare
+}
+
+// A Tag is metadata on a photo
+type Tag struct {
+	CreatedAt time.Time
+	PictureID uint   `gorm:"primary_key;size:11;index;AUTO_INCREMENT:false"`
+	Tag       string `gorm:"primary_key;type:varchar(256)"`
 }
 
 // An Album is a collection of a users photos
@@ -72,14 +80,6 @@ type Registration struct {
 // TableName returns Registration's correct table name
 func (Registration) TableName() string {
 	return "registration"
-}
-
-// A Tag is metadata on a photo
-type Tag struct {
-	CreatedAt time.Time
-	TagID     uint   `gorm:"primary_key;size:11;AUTO_INCREMENT"`
-	Picture   int    `gorm:"size:11;"`
-	Tag       string `gorm:"type:varchar(256)"`
 }
 
 // An AlbumShare is metadata on a shared album

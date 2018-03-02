@@ -140,7 +140,7 @@ func getUsersPicturesHandler(w http.ResponseWriter, r *http.Request) {
 
 	s, ok := getSession(auth)
 	if !ok {
-		writeError(&w, "invalid session, please reload your page", 403)
+		writeError(&w, "invalid session, please reload your page", 401)
 		return
 	}
 	const (
@@ -213,7 +213,7 @@ func validateUserLoggedIn(w http.ResponseWriter, r *http.Request) {
 
 	s, ok := getSession(auth)
 	if !ok {
-		writeError(&w, "invalid session, please reload your page", 403)
+		writeError(&w, "invalid session, please reload your page", 401)
 		return
 	}
 	resp := jsonResponse{

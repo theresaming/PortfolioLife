@@ -275,15 +275,39 @@ func getUsersPicturesAndRefreshURL(user *User, limit int, page int) (pictures []
 *		  *
 **********/
 
-func savePictureTags(picture *Picture) {
+func createTags(picture *Picture, tags []Tag) error {
 	db, err := openConnection()
 	if err != nil {
 		panic(err)
 	}
 	defer db.Close()
-	// TODO continue here
-	db.Create(&picture.Tags)
-	db.Exec("INSERT INTO `tags` (picture, tag) VALUES (?);", picture.Tags)
+	picture.Tags = append(picture.Tags, tags...)
+	return db.Save(picture).Error
+}
+
+func deleteTags(picture *Picture, tags []string) error {
+	db, err := openConnection()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	err = db.Exec("DELETE FROM tags WHERE tag IN (?) AND picture_id = ?", tags, picture.PictureID).Error
+
+	p, _ := getPicture(&User{ID: picture.UserID}, picture.Mask, false)
+	*picture = *p
+
+	return err
+}
+
+func getTags(picture *Picture) (tags []Tag, err error) {
+	db, err := openConnection()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	tags = make([]Tag, 0)
+	err = db.Where("picture_id = ?", picture.PictureID).Find(&tags).Error
+	return
 }
 
 /****************

@@ -26,17 +26,6 @@ func TestSetToken(t *testing.T) {
 	setUserToken(u, generateRandomString(32))
 }
 
-func TestRegistration(t *testing.T) {
-	/*u := testConf.Users[0]
-	u.Email = "paul7@paul.com"
-
-	token, err := registerUser(&u)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(token)*/
-}
-
 func TestPassHash(t *testing.T) {
 	salt := generateRandomString(saltLength)
 

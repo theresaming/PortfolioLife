@@ -123,15 +123,21 @@ var apiRoutes = routes{
 	// Tag routes
 	route{
 		Method:      "POST",
-		Pattern:     "/picture/{pictureID}/tag",
+		Pattern:     "/picture/{pictureID}/tags",
 		Validation:  true,
 		HandlerFunc: addTagHandler,
 	},
 	route{
 		Method:      "DELETE",
-		Pattern:     "/picture/{pictureID}/tag",
+		Pattern:     "/picture/{pictureID}/tags",
 		Validation:  true,
 		HandlerFunc: removeTagHandler,
+	},
+	route{
+		Method:      "GET",
+		Pattern:     "/picture/{pictureID}/tags",
+		Validation:  true,
+		HandlerFunc: getTagHandler,
 	},
 }
 
@@ -202,6 +208,12 @@ func getSession(key string) (sess *session, ok bool) {
 	}
 	sess = s.(*session)
 	return
+}
+
+func reloadUserSessionFromToken(key string) {
+	if sessionMap.Remove(key) {
+		getSession(key)
+	}
 }
 
 func getFuncName(i interface{}) string {
