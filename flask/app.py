@@ -2,35 +2,17 @@ from flask import Flask, flash, render_template, request, session, json, redirec
 import requests
 import os
 from werkzeug import secure_filename
-from werkzeug.datastructures import FileStorage
-from wtforms import Form, StringField, PasswordField, validators
+
+from config import MYSQL_URL, OAUTH_CREDENTIALS, allowed_file
+from registration import RegistrationForm
+from api_strings import *
 
 app = Flask(__name__)
 app.secret_key = os.urandom(12)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://jd:jd2018@67.205.168.129/junior_design'
+app.config['SQLALCHEMY_DATABASE_URI'] = MYSQL_URL
+app.config['OAUTH_CREDENTIALS'] = OAUTH_CREDENTIALS
 
-API_URL = "http://67.205.168.129:8080/"
-
-class RegistrationForm(Form):
-    username = StringField('Username', [validators.Length(min=4, max=25)], description = "name")
-    email = StringField('Email Address', [validators.Length(min=6, max=35)], description = "email")
-    password = PasswordField('Create Password', [
-        validators.DataRequired(),
-        validators.EqualTo('confirm', message='Passwords must match')
-    ], description = "password")
-    confirm = PasswordField('Confirm Password', description = "Confirm password")
-
-app.config['OAUTH_CREDENTIALS'] = {
-    'facebook': {
-        'id': '1987111774844195',
-        'secret': '45f2751acb4510955a067be66c206e19'
-    },
-    'google': {
-        'id': '500260639279-e8e8eniirbnm82m0sngtt0pogn86pbvd.apps.googleusercontent.com',
-        'secret': 'QpD_M7SzNVpmMVNPXTrJmy1m'
-    }
-}
 
 @app.route('/')
 def login():
@@ -52,10 +34,8 @@ def do_admin_login():
             "password": password
         }
         jsonStr = json.dumps(data)
-        r = requests.post('http://67.205.168.129:8080/user/login', jsonStr)
+        r = requests.post(api_login, jsonStr)
         jsonDict = json.loads(r.text)
-        # print jsonDict['success']
-        # print jsonDict['message']
         if jsonDict['success']:
             session['logged_in'] = True
             resp = make_response(redirect('/'))
@@ -66,7 +46,7 @@ def do_admin_login():
     return render_template('login.html')
 
 
-@app.route('/registration', methods=['GET','POST'])
+@app.route('/registration', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm(request.form)
     if request.method == 'POST':
@@ -79,14 +59,13 @@ def register():
             'password': password,
             }
         jsonStr = json.dumps(data)
-        r = requests.post("http://67.205.168.129:8080/user/register", jsonStr)
+        r = requests.post(api_registration, jsonStr)
+        # TODO API does not return error for mismatching passwords/invalid email/etc.
+        # TODO Flask does not handle error, including a missing message in current implementation.
         jsonDict = json.loads(r.text)
-        # print "jsonDict: ", jsonDict
         print "jsonDict['message']", jsonDict['message']
-        # print "jsonDict['success']", jsonDict['success']
         if jsonDict['success']:
             flash('Thanks for registering')
-            token = jsonDict['token']
             return render_template('login.html')
         else:
             flash(jsonDict['message'])
@@ -96,7 +75,7 @@ def register():
 @app.route("/logout")
 def logout():
     session['logged_in'] = False
-    requests.post(API_URL + "user/logout", headers={'token': request.cookies.get('token')})
+    requests.post(api_logout, headers={'token': request.cookies.get('token')})
     resp = make_response(redirect('/'))
     resp.set_cookie('token', '', expires=0)
     return resp
@@ -106,33 +85,28 @@ def logout():
 def load_home():
     if session.get('logged_in'):
         token = request.cookies.get('token')
+
         # Get photos from API
-        getPhotos = requests.get(API_URL + "user/pictures", headers={'token': token})
+        getPhotos = requests.get(api_get_photos, headers={'token': token})
         jsonDict = json.loads(getPhotos.text)
 
-        pictureUrlArr = []
         # Add photos to array
-        if (jsonDict['success'] == True):
-            pictureUrlArr = []
-            for pictureElements in jsonDict['pictures']:
-                pictureUrlArr.append(pictureElements['url'])
+        if jsonDict['success']:
+            pictureUrlArr = [picture['url'] for picture in jsonDict['pictures']]
         else:
             flash(jsonDict['message'])
-        return render_template('home.html', imageArr = pictureUrlArr)
+            pictureUrlArr = []
+        return render_template('home.html', imageArr=pictureUrlArr)
     else:
         return login()
+
 
 @app.route("/upload")
 def load_upload():
     return render_template('uploadPhotos.html')
 
-ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-@app.route('/uploader', methods = ['GET', 'POST'])
+@app.route('/uploader', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         f = request.files['file']
@@ -144,24 +118,22 @@ def upload_file():
         if f and allowed_file(f.filename):
             filename = secure_filename(f.filename)
             print request.cookies.get('token')
-            req = requests.post(API_URL + "picture/upload", headers={'token': request.cookies.get('token')},
-                files = {'files': (filename, f, None, None)})
+            req = requests.post(api_upload,
+                                headers={'token': request.cookies.get('token')},
+                                files={'files': (filename, f, None, None)})
             jsonDict = json.loads(req.text)
             if jsonDict['success']: # if upload successful
                 return load_home()
             else:
                 return str(req.status_code) + ': ' + jsonDict['message']
 
+
 @app.route("/delete", methods = ['GET'])
 def load_delete():
-    req = requests.get(API_URL + "user/pictures", headers={'token': request.cookies.get('token')})
+    req = requests.get(api_get_photos, headers={'token': request.cookies.get('token')})
     jsonDict = json.loads(req.text)
-    # print jsonDict['success']
-    imageUrlArr = []
-    for pictures in jsonDict['pictures']:
-        imageUrlArr.append(pictures['url'])
-    return render_template('deletePhotos.html', imageArr = imageUrlArr)
-
+    imageUrlArr = [picture['url'] for picture in jsonDict['pictures']]
+    return render_template('deletePhotos.html', imageArr=imageUrlArr)
 
 
 if __name__ == "__main__":
