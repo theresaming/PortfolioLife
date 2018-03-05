@@ -4,3 +4,7 @@ server/server
 server/server.exe
 server/run-server.sh
 flask/*.pyc
+.idea/PortfolioLife.iml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
