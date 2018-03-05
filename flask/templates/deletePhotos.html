@@ -1,24 +1,53 @@
 {% extends "photoManageLayout.html" %}
 
 {% block body %}
-<div class = "container">
-    <div class = "row">
-        <div class = "twelve columns">
-            <h3> Delete Photo</h3>
-            <p>
-                (click on photo to delete)
-            </p>
-        </div>
-    </div>
-    <div class = "container">
-        <div class = "photo-row">
-            {% for imageUrl in imageArr %}
-                <div class = "photo-col">
-                    <a href = ""><img src= "{{imageUrl}}" /></a>
+
+    {% if not session['logged_in'] %}
+        <p>You're not logged in!</p>
+    {% else %}
+        <div class = "container">
+            <div class = "home-content">
+                <div class = "row">
+                    <div class = "twelve columns">
+                        <h3>Delete Photos</h3>
+                    </div>
                 </div>
-            {% endfor %}
+                <div class = "row">
+                    <div class = "six columns">
+                        <div class="delete">
+                            <a href="{{ url_for('load_delete') }}">Delete Photos</a>
+                            {# TODO url_for delete button #}
+                        </div>
+                    </div>
+                </div>
+                <div class = "row">
+                    <div class = "six columns">
+                        <select multiple="multiple" class="image-picker show-html">
+                            {% for imageUrl in imageArr %}
+                                <option data-img-src="{{ imageUrl }}" value=" {{ loop.index0 }}">picture {{ loop.index0 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
+        <div class = "container">
+            <div class = "row">
+                <ul class = "thumbnails image_picker_selector">
+                    {% for imageUrl in imageArr %}
+                        <li>
+                            <div class = "thumbnail">
+                                <img src="{{imageUrl}}" class="image_picker_image">
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+    {% endif %}
+
+    <script src="/static/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/static/scripts/image-picker.min.js"></script>
 
 {% endblock %}
