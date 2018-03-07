@@ -149,3 +149,20 @@ func getTagHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 
 }
+
+func tagFuzzySearch(w http.ResponseWriter, r *http.Request) {
+	type query struct {
+		Search string `json:"search"`
+	}
+	tagReqs := new(query)
+	if err := json.NewDecoder(r.Body).Decode(&tagReqs); err != nil {
+		writeError(&w, "invalid json format", 400)
+		return
+	}
+	auth := r.Header.Get("token")
+	_, ok := getSession(auth)
+	if !ok {
+		writeError(&w, "invalid session, please reload your page", 401)
+		return
+	}
+}

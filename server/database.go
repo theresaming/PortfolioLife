@@ -31,10 +31,9 @@ type User struct {
 // A Picture is data about an uploaded photo
 type Picture struct {
 	CreatedAt time.Time
-	PictureID uint   `gorm:"primary_key;size:11;index;AUTO_INCREMENT:true;"`
 	UserID    uint   `gorm:"size:11;AUTO_INCREMENT:false"`
-	ImagePath string `gorm:"type:varchar(512)" json:"path"` // Path to image in S3 Bucket
-	Mask      string `gorm:"unique;type:varchar(32)"`       // portfoliolife.com/picture/mask
+	ImagePath string `gorm:"type:varchar(512)" json:"path"`        // Path to image in S3 Bucket
+	Mask      string `gorm:"unique;type:varchar(32);primary_key;"` // portfoliolife.com/picture/mask
 	// The mask acts as a key of sorts
 
 	ValidURL       string `gorm:"type:varchar(1024)"`
@@ -42,18 +41,18 @@ type Picture struct {
 
 	// TODO: more metadata here
 
-	Albums []Album `gorm:"many2many:picture_in_album;AssociationForeignKey:albumID;ForeignKey:pictureID;"`
+	Albums []Album `gorm:"many2many:picture_in_album;AssociationForeignKey:albumID;ForeignKey:Mask;"`
 
-	Tags []Tag `gorm:"foreignkey:PictureID"`
+	Tags []Tag `gorm:"foreignkey:mask"`
 
 	PictureShare PictureShare
 }
 
 // A Tag is metadata on a photo
 type Tag struct {
-	CreatedAt time.Time
-	PictureID uint   `gorm:"primary_key;size:11;index;AUTO_INCREMENT:false"`
-	Tag       string `gorm:"primary_key;type:varchar(256)"`
+	CreatedAt   time.Time
+	PictureMask string `gorm:"primary_key;size:11;index;unique"`
+	Tag         string `gorm:"primary_key;type:varchar(256)"`
 }
 
 // An Album is a collection of a users photos
