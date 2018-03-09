@@ -158,6 +158,8 @@ func getTagHandler(w http.ResponseWriter, r *http.Request) {
 func tagFuzzySearch(w http.ResponseWriter, r *http.Request) {
 	type query struct {
 		Search string `json:"search"`
+		Front  bool   `json:"front,omitempty"`
+		Back   bool   `json:"back,omitempty"`
 	}
 	search := new(query)
 	if err := json.NewDecoder(r.Body).Decode(&search); err != nil {
@@ -170,7 +172,7 @@ func tagFuzzySearch(w http.ResponseWriter, r *http.Request) {
 		writeError(&w, "invalid session, please reload your page", 401)
 		return
 	}
-	pictures, err := searchWithTag(s.user, search.Search, true, true, true)
+	pictures, err := searchWithTag(s.user, search.Search, search.Front, search.Back, true)
 	if err != nil {
 		l.Println(err)
 		writeError(&w, "error searching", 500)
