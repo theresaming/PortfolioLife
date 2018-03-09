@@ -41,9 +41,9 @@ type Picture struct {
 
 	// TODO: more metadata here
 
-	Albums []Album `gorm:"many2many:picture_in_album;AssociationForeignKey:albumID;ForeignKey:Mask;"`
+	Albums []Album `gorm:"many2many:picture_in_album;AssociationForeignKey:albumID;ForeignKey:picture_mask;"`
 
-	Tags []Tag `gorm:"foreignkey:mask"`
+	Tags []Tag `gorm:"ForeignKey:picture_mask;PRELOAD:false;"`
 
 	PictureShare PictureShare
 }
@@ -51,7 +51,7 @@ type Picture struct {
 // A Tag is metadata on a photo
 type Tag struct {
 	CreatedAt   time.Time
-	PictureMask string `gorm:"primary_key;size:11;index;unique"`
+	PictureMask string `gorm:"primary_key;type:varchar(32);index"`
 	Tag         string `gorm:"primary_key;type:varchar(256)"`
 }
 

@@ -10,7 +10,7 @@ func TestAddTag(t *testing.T) {
 		ID: 3,
 	}
 	verboseDatabase = false
-	pic, err := getPicture(u, "HdCtO_jRycFQEyguMUSQ09MXHaKiqLYc", false)
+	pic, err := getPicture(u, "2S4ttkSxE8j6SEdRoNQvCspFoQ_S0Ejs", false)
 	if err != nil {
 		panic(err)
 	}
@@ -53,9 +53,13 @@ func TestGetTags(t *testing.T) {
 }
 
 func TestSearchTags(t *testing.T) {
-	/* u := &User{
+	u := &User{
 		ID: 3,
 	}
-	searchQuery := "test" */
-
+	searchQuery := "est1"
+	pics, err := searchWithTag(u, searchQuery, true, true, false)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(pics)
 }

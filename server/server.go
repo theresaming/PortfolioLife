@@ -140,7 +140,7 @@ var apiRoutes = routes{
 		HandlerFunc: getTagHandler,
 	},
 	route{
-		Method:      "GET",
+		Method:      "POST",
 		Pattern:     "/picture/search",
 		Validation:  true,
 		HandlerFunc: tagFuzzySearch,

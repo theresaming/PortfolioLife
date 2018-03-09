@@ -41,7 +41,12 @@ func addTagHandler(w http.ResponseWriter, r *http.Request) {
 		tags[i] = Tag{Tag: tag}
 		i++
 	}
-	createTags(pic, tags)
+	err = createTags(pic, tags)
+	if err != nil {
+		// Most likely error here
+		writeError(&w, "duplicate tag(s)", 500)
+		return
+	}
 	resp := struct {
 		*jsonResponse
 	}{
@@ -154,15 +159,45 @@ func tagFuzzySearch(w http.ResponseWriter, r *http.Request) {
 	type query struct {
 		Search string `json:"search"`
 	}
-	tagReqs := new(query)
-	if err := json.NewDecoder(r.Body).Decode(&tagReqs); err != nil {
+	search := new(query)
+	if err := json.NewDecoder(r.Body).Decode(&search); err != nil {
 		writeError(&w, "invalid json format", 400)
 		return
 	}
 	auth := r.Header.Get("token")
-	_, ok := getSession(auth)
+	s, ok := getSession(auth)
 	if !ok {
 		writeError(&w, "invalid session, please reload your page", 401)
 		return
 	}
+	pictures, err := searchWithTag(s.user, search.Search, true, true, true)
+	if err != nil {
+		l.Println(err)
+		writeError(&w, "error searching", 500)
+		return
+	}
+	type picResponse struct {
+		Mask string `json:"pictureID"`
+		URL  string `json:"url"`
+	}
+	responses := make([]picResponse, len(pictures))
+	for i, p := range pictures {
+		responses[i].Mask = p.Mask
+		responses[i].URL = p.ValidURL
+	}
+	resp := struct {
+		*jsonResponse
+		PicResp []picResponse `json:"pictures"`
+	}{
+		&jsonResponse{
+			Success: true,
+		},
+		responses,
+	}
+	data, err := json.Marshal(resp)
+	if err != nil {
+		panic(err)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(data)
 }
