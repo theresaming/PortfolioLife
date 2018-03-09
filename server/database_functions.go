@@ -325,12 +325,16 @@ func searchWithTag(u *User, term string, front, back, refresh bool) (pictures []
 	} else if back {
 		fuzz = fmt.Sprintf("%s%%", term)
 	}
-	/*err = db.Table("tags").Select("tags.picture_mask").Joins("LEFT JOIN pictures p ON tags.picture_mask = p.mask").
-	Joins("LEFT JOIN users u ON p.user_id = u.id").
-	Where("u.id = ? AND tags.tag LIKE ?", u.ID, fuzz).Scan(&pictureMasks).Error*/
-	err = db.Raw(`SELECT t.picture_mask FROM tags t LEFT JOIN pictures p ON t.picture_mask = p.mask LEFT JOIN users u ON p.user_id = u.id WHERE u.id = ? AND t.tag LIKE ?`, u.ID, fuzz).Scan(&pictureMasks).Error
+
+	rows, err := db.Raw(`SELECT t.picture_mask FROM tags t LEFT JOIN pictures p ON t.picture_mask = p.mask LEFT JOIN users u ON p.user_id = u.id WHERE u.id = ? AND t.tag LIKE ?`, u.ID, fuzz).Rows()
 	if err != nil {
 		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var mask string
+		rows.Scan(&mask)
+		pictureMasks = append(pictureMasks, mask)
 	}
 
 	return getPictures(u, pictureMasks, refresh)
