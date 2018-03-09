@@ -137,7 +137,7 @@ def load_delete():
 
 
 if __name__ == "__main__":
-    app.run(debug=True,host='0.0.0.0', port=4000)
+    app.run(debug=False,host='0.0.0.0', port=5000)
     # max upload thingy
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 # 16 MB
     # TODO: throw a 404 page if filesize is too large
