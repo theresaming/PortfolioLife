@@ -291,7 +291,7 @@ func deleteTags(picture *Picture, tags []string) error {
 		panic(err)
 	}
 	defer db.Close()
-	err = db.Exec("DELETE FROM tags WHERE tag IN (?) AND picture_id = ?", tags, picture.PictureID).Error
+	err = db.Exec("DELETE FROM tags WHERE tag IN (?) AND picture_mask = ?", tags, picture.Mask).Error
 
 	p, _ := getPicture(&User{ID: picture.UserID}, picture.Mask, false)
 	*picture = *p
@@ -306,8 +306,38 @@ func getTags(picture *Picture) (tags []Tag, err error) {
 	}
 	defer db.Close()
 	tags = make([]Tag, 0)
-	err = db.Where("picture_id = ?", picture.PictureID).Find(&tags).Error
+	err = db.Where("picture_mask = ?", picture.Mask).Find(&tags).Error
 	return
+}
+
+func searchWithTag(u *User, term string, front, back, refresh bool) (pictures []Picture, err error) {
+	db, err := openConnection()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	pictureMasks := make([]string, 0)
+	var fuzz = term
+	if front && back {
+		fuzz = fmt.Sprintf("%%%s%%", term)
+	} else if front {
+		fuzz = fmt.Sprintf("%%%s", term)
+	} else if back {
+		fuzz = fmt.Sprintf("%s%%", term)
+	}
+
+	rows, err := db.Raw(`SELECT t.picture_mask FROM tags t LEFT JOIN pictures p ON t.picture_mask = p.mask LEFT JOIN users u ON p.user_id = u.id WHERE u.id = ? AND t.tag LIKE ?`, u.ID, fuzz).Rows()
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var mask string
+		rows.Scan(&mask)
+		pictureMasks = append(pictureMasks, mask)
+	}
+
+	return getPictures(u, pictureMasks, refresh)
 }
 
 /****************

@@ -139,6 +139,12 @@ var apiRoutes = routes{
 		Validation:  true,
 		HandlerFunc: getTagHandler,
 	},
+	route{
+		Method:      "POST",
+		Pattern:     "/picture/search",
+		Validation:  true,
+		HandlerFunc: tagFuzzySearch,
+	},
 }
 
 func logHandler(h http.HandlerFunc) http.HandlerFunc {
