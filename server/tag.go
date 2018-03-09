@@ -173,10 +173,17 @@ func tagFuzzySearch(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	pictures, err := searchWithTag(s.user, search.Search, search.Front, search.Back, true)
+	var pictureCount int
 	if err != nil {
-		l.Println(err)
-		writeError(&w, "error searching", 500)
-		return
+		if err.Error() == "no picture found for your user session" {
+			pictureCount = 0
+		} else {
+			l.Println(err)
+			writeError(&w, "error searching", 500)
+			return
+		}
+	} else {
+		pictureCount = len(pictures)
 	}
 	type picResponse struct {
 		Mask string `json:"pictureID"`
@@ -189,12 +196,14 @@ func tagFuzzySearch(w http.ResponseWriter, r *http.Request) {
 	}
 	resp := struct {
 		*jsonResponse
-		PicResp []picResponse `json:"pictures"`
+		PicResp     []picResponse `json:"pictures"`
+		ResultCount int           `json:"resultCount"`
 	}{
 		&jsonResponse{
 			Success: true,
 		},
 		responses,
+		pictureCount,
 	}
 	data, err := json.Marshal(resp)
 	if err != nil {
