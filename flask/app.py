@@ -128,12 +128,32 @@ def upload_file():
                 return str(req.status_code) + ': ' + jsonDict['message']
 
 
-@app.route("/delete", methods = ['GET'])
+@app.route('/deleter', methods=['POST'])
+def delete_file():
+    if request.method == 'POST':
+        pic_id = ""
+        # TODO fix this super-hack to get the id off the picture?
+        for x in request.form:
+            pic_id = x[:-2]
+
+        token = request.cookies.get('token')
+        print token
+        api_delete_pic = api_delete + pic_id
+        req = requests.delete(api_delete_pic,
+                              headers={'token': token})
+        jsonDict = json.loads(req.text)
+        if jsonDict['success']: # if upload successful
+            return load_home()
+        else:
+            return str(req.status_code) + ': ' + jsonDict['message']
+
+
+@app.route("/delete", methods=['GET'])
 def load_delete():
     req = requests.get(api_get_photos, headers={'token': request.cookies.get('token')})
     jsonDict = json.loads(req.text)
-    imageUrlArr = [picture['url'] for picture in jsonDict['pictures']]
-    return render_template('deletePhotos.html', imageArr=imageUrlArr)
+    imageArr = [{'url': picture['url'], 'id': picture['pictureID']} for picture in jsonDict['pictures']]
+    return render_template('deletePhotos.html', imageArr=imageArr)
 
 
 if __name__ == "__main__":

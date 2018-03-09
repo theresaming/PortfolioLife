@@ -12,36 +12,24 @@
                         <h3>Delete Photos</h3>
                     </div>
                 </div>
-                <div class = "row">
-                    <div class = "six columns">
-                        <div class="delete">
-                            <a href="{{ url_for('load_delete') }}">Delete Photos</a>
-                            {# TODO url_for delete button #}
-                        </div>
-                    </div>
-                </div>
-                <div class = "row">
-                    <div class = "six columns">
-                        <select multiple="multiple" class="image-picker show-html">
-                            {% for imageUrl in imageArr %}
-                                <option data-img-src="{{ imageUrl }}" value=" {{ loop.index0 }}">picture {{ loop.index0 }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
+                <p>Select a photo to delete.</p>
             </div>
         </div>
         <div class = "container">
             <div class = "row">
-                <ul class = "thumbnails image_picker_selector">
-                    {% for imageUrl in imageArr %}
-                        <li>
-                            <div class = "thumbnail">
-                                <img src="{{imageUrl}}" class="image_picker_image">
+                <form action="{{ url_for("delete_file") }}" method="POST">
+                    <ul class = "photo-grid">
+                        {% for imageUrl in imageArr %}
+                            <div class="thumbnail">
+                                <li class="image-element">
+                                    <a class="venobox" href="{{imageUrl["url"]}}">
+                                        <input type="image" name="{{imageUrl["id"]}}" src="{{imageUrl["url"]}}" border="0" alt="Submit" />
+                                    </a>
+                                </li>
                             </div>
-                        </li>
-                    {% endfor %}
-                </ul>
+                        {% endfor %}
+                    </ul>
+                </form>
             </div>
         </div>
 
