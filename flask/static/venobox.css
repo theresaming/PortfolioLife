@@ -190,8 +190,8 @@ or at least read this note: http://i.imgur.com/7C0ws9e.gif
     /* max-height: 100%; */
 }
 .vbox-container img{
-    max-width: 100%;
-    height: auto;
+    max-height: 40em;
+    width: auto;
 }
 .figlio{
     box-shadow: 0 0 12px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
@@ -199,11 +199,10 @@ or at least read this note: http://i.imgur.com/7C0ws9e.gif
     text-align: initial;
 }
 img.figlio{
-    -webkit-user-select: none;
--khtml-user-select: none;
--moz-user-select: none;
--o-user-select: none;
-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }
 .vbox-content.swipe-left{
     margin-left: -200px !important;
