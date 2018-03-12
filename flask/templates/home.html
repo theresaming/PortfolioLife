@@ -38,15 +38,18 @@
         <div class = "row">
                 <div class = "photo-grid">
                     {% for imageUrl in imageArr %}
-                    <a class="venobox" data-gall="myGallery" data-title="{{imageUrl}} "href= "#" data-href="{{imageUrl}}">
-                        <div class = "thumbnail" style="background-image:url({{imageUrl}}); background-size: cover; background-position: 50%">
-                            <div class = "trash">
-                                <i class="fas fa-trash-alt fa-2x"></i>
+                        <a class="venobox" data-gall="myGallery" data-title="{{imageUrl}} "href= "#" data-href="{{imageUrl}}">
+                            <div class = "thumbnail" style="background-image:url({{imageUrl}}); background-size: cover; background-position: 50%">
+                                <div class = "tag">
+                                    <i class="fas fa-tag fa-2x"></i>
+                                </div>
+                                <div class = "trash" style="z-index:100">
+                                    <i class="fas fa-trash-alt fa-2x"></i>
+                                </div>
+                                <div class = "image-tags">
+                                    #tags
+                                </div>
                             </div>
-                            <div class = "image-tags">
-                                #tags
-                            </div>
-                        </div>
                     {% endfor %}
                 </a>
                 </div>
@@ -57,7 +60,7 @@
 <script src="/static/bower_components/jquery/dist/jquery.js"></script>
 <script src="/static/scripts/venobox.min.js"></script>
 <script src="/static/scripts/fontawesome-all.js"></script>
-
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 <script>
 $(document).ready(function(){
     $('.venobox').venobox({
