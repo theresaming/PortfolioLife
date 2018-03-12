@@ -36,18 +36,18 @@
             </div>
         </div>
         <div class = "row">
-                <ul class = "photo-grid">
+                <div class = "photo-grid">
                     {% for imageUrl in imageArr %}
-                        <div class = "thumbnail">
-                            <li class = "image-element">
-                                <a class="venobox" data-gall="myGallery" href= "#" data-href="{{imageUrl}}">
-                                    <i class="fas fa-check-circle" style="color: #5bb56c;display:none"></i>
-                                    <img src="{{imageUrl}}"/>
-                                </a>
-                            </li>
+                    <a class="venobox" data-gall="myGallery" data-title="{{imageUrl}} "href= "#" data-href="{{imageUrl}}">
+                        <div class = "thumbnail" style="background-image:url({{imageUrl}}); background-size: cover; background-position: 50%">
+                            <!-- <i class="fas fa-times-circle" ></i> -->
+                            <div class = "image-tags">
+                                #tags
+                            </div>
                         </div>
                     {% endfor %}
-                </ul>
+                </a>
+                </div>
         </div>
     </div>
 
@@ -58,7 +58,10 @@
 
 <script>
 $(document).ready(function(){
-    $('.venobox').venobox();
+    $('.venobox').venobox({
+    titleattr: 'data-title',    // default: 'title'
+    titlePosition: 'bottom'
+});
 
 });
 function runSelect(venobox) {
