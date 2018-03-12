@@ -40,7 +40,9 @@
                     {% for imageUrl in imageArr %}
                     <a class="venobox" data-gall="myGallery" data-title="{{imageUrl}} "href= "#" data-href="{{imageUrl}}">
                         <div class = "thumbnail" style="background-image:url({{imageUrl}}); background-size: cover; background-position: 50%">
-                            <!-- <i class="fas fa-times-circle" ></i> -->
+                            <div class = "trash">
+                                <i class="fas fa-trash-alt fa-2x"></i>
+                            </div>
                             <div class = "image-tags">
                                 #tags
                             </div>

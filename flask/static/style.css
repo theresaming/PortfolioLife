@@ -200,6 +200,20 @@ ul li.selected {
     border: 2px solid #000;
 }
 
+.trash {
+    padding:10px;
+    position:absolute;
+    top: 0px;
+    right: 0px;
+    color: #424242;
+    z-index: -1;
+}
+
+.trash:hover {
+    z-index: 100;
+    opacity: 1;
+    transition: .3s ease-in-out;
+}
 @media (min-width: 400px) {
     .thumbnail {
         position: relative;
