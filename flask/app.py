@@ -153,6 +153,14 @@ def view_image(image_id):
         except Exception, e:
         	return(str(e))
 
+@app.route("/delete/<image_id>")
+def delete_image(image_id):
+    req = requests.delete(api_photo_view + image_id, headers={'token': request.cookies.get('token')})
+    jsonDict = json.loads(req.text)
+    if jsonDict['success']:
+        return load_home()
+
+
 if __name__ == "__main__":
     app.run(debug=False,host='0.0.0.0', port=5000)
     # max upload thingy
