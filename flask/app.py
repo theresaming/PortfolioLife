@@ -137,12 +137,17 @@ def load_delete():
     imageUrlArr = [picture['url'] for picture in jsonDict['pictures']]
     return render_template('deletePhotos.html', imageArr=imageUrlArr)
 
-@app.route("/image/<image_id>")
+@app.route("/image/<image_id>", methods=['GET'])
 def view_image(image_id):
-	try:
-		return render_template("viewImage.html", image_id=image_id)
-	except Exception, e:
-		return(str(e))
+    print image_id
+    req = requests.get(api_photo_view + image_id, headers={'token': request.cookies.get('token')})
+    jsonDict = json.loads(req.text)
+    if jsonDict['success']:
+        image_url = jsonDict['url']
+        try:
+            return render_template("viewImage.html", imageID=image_id, imageURL = image_url)
+        except Exception, e:
+        	return(str(e))
 
 if __name__ == "__main__":
     app.run(debug=False,host='0.0.0.0', port=5000)

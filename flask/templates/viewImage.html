@@ -5,7 +5,31 @@
 {% if not session['logged_in'] %}
     <p>You're not logged in!</p>
 {% else %}
+<div class = "container">
+    <div class = "home-content">
+        <div class = "row">
+            <div class = "twelve columns">
+                <h3>Edit Photo</h3>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class = "container">
+    <div class = "photo-display">
+        <div class = "row">
+            <div class = "twelve columns">
+                <img class = "image-display" src="{{imageURL}}" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="text" value="" data-role="tagsinput" id="tags" class="form-control" style="border: none;line-height: 5;" >
 {% endif %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js">></script>
+<script src="/static/scripts/bootstrap-tagsinput.js"></script>
+
 
 {% endblock %}

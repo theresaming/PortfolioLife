@@ -233,3 +233,8 @@ ul li.selected {
         padding: 10px;
     }
 }
+
+.image-display {
+    max-width: 80%;
+    text-align: center;
+}
