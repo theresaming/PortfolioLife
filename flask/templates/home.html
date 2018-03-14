@@ -27,13 +27,6 @@
         </div>
     </div>
     <div class = "container">
-        <div class = "row">
-            <div class = "twelve columns">
-                <div class = "select-activate">
-                    <button class="button-primary" id="select-photo" onclick="runSelect()">Click to Disable Gallery</button>
-                </div>
-            </div>
-        </div>
         <div class = "row" style="margin-top: 2em">
                 <div class = "photo-grid">
                         {% for imageUrl, imageID in pictureArr %}
@@ -58,6 +51,7 @@
                                     </div>
                                 </div>
                                 <a class="edit" href = "http://google.com"><i class="fas fa-tag fa-2x"></i></a>
+                                <a class="delete" href = "#"><i class = "fas fa-trash-alt fa-2x"></i></a>
                             </a>
                         {% endfor %}
                 </div>

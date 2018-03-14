@@ -201,35 +201,6 @@ ul li.selected {
     border: 2px solid #000;
 }
 
-.trash {
-    padding:10px;
-    position:absolute;
-    top: 0px;
-    right: 0px;
-    color: #424242;
-    z-index: -1;
-}
-
-.trash:hover {
-    opacity: 1;
-    z-index:100;
-}
-
-.tag {
-    padding:10px;
-    position:absolute;
-    top: 0px;
-    left: 0px;
-    color: #e6ba21;
-    z-index: -1;
-    opacity: 1.5;
-}
-
-.tag:hover {
-    z-index: 100;
-    opacity: 1;
-}
-
 .edit {
     position: relative;
     top: -6em;
@@ -238,6 +209,18 @@ ul li.selected {
 
 }
 .edit:hover {
+    color: #ffffff;
+    transition: .3s ease-in-out;
+}
+
+.delete {
+    position: relative;
+    top: -6em;
+    left: -6em;
+    color: #424242;
+}
+
+.delete:hover {
     color: #ffffff;
     transition: .3s ease-in-out;
 }
