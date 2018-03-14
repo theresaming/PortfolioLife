@@ -172,6 +172,8 @@ html {
     padding: 2rem;
 }
 
+
+
 .thumbnail .image-tags {
     position: relative;
     z-index: 1;
@@ -205,10 +207,11 @@ ul li.selected {
     top: 0px;
     right: 0px;
     color: #424242;
+    z-index: -1;
 }
 
 .trash:hover {
-    opacity: 1.5;
+    opacity: 1;
     z-index:100;
 }
 
@@ -227,6 +230,17 @@ ul li.selected {
     opacity: 1;
 }
 
+.edit {
+    position: relative;
+    top: -6em;
+    left: -16em;
+    color: #424242;
+
+}
+.edit:hover {
+    color: #ffffff;
+    transition: .3s ease-in-out;
+}
 
 @media (min-width: 400px) {
     .thumbnail {

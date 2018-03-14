@@ -92,11 +92,13 @@ def load_home():
 
         # Add photos to array
         if jsonDict['success']:
+            pictureArr = [(picture['url'], picture['pictureID']) for picture in jsonDict['pictures']]
             pictureUrlArr = [picture['url'] for picture in jsonDict['pictures']]
+            pictureIDArr = [picture['pictureID'] for picture in jsonDict['pictures']]
         else:
             flash(jsonDict['message'])
             pictureUrlArr = []
-        return render_template('home.html', imageArr=pictureUrlArr)
+        return render_template('home.html', pictureArr = pictureArr, pictureUrlArr=pictureUrlArr, pictureIDArr=pictureIDArr)
     else:
         return login()
 
@@ -135,6 +137,12 @@ def load_delete():
     imageUrlArr = [picture['url'] for picture in jsonDict['pictures']]
     return render_template('deletePhotos.html', imageArr=imageUrlArr)
 
+@app.route("/image/<image_id>")
+def view_image(image_id):
+	try:
+		return render_template("viewImage.html", image_id=image_id)
+	except Exception, e:
+		return(str(e))
 
 if __name__ == "__main__":
     app.run(debug=False,host='0.0.0.0', port=5000)

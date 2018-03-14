@@ -30,28 +30,36 @@
         <div class = "row">
             <div class = "twelve columns">
                 <div class = "select-activate">
-                    <button class="button-primary" id="select-photo" onclick="runSelect()">Select Photos</button>
-                    <!-- <button class="button" id="activate-gallery" onclick="runGallery()">Run Gallery</button> -->
+                    <button class="button-primary" id="select-photo" onclick="runSelect()">Click to Disable Gallery</button>
                 </div>
             </div>
         </div>
-        <div class = "row">
+        <div class = "row" style="margin-top: 2em">
                 <div class = "photo-grid">
-                    {% for imageUrl in imageArr %}
-                        <a class="venobox" data-gall="myGallery" data-title="{{imageUrl}} "href= "#" data-href="{{imageUrl}}">
-                            <div class = "thumbnail" style="background-image:url({{imageUrl}}); background-size: cover; background-position: 50%">
-                                <div class = "tag">
+                        {% for imageUrl, imageID in pictureArr %}
+                            <!-- <div class = "edits">
+                                <div class = "tag" href="{{url_for('view_image', image_id = imageID)}}">
                                     <i class="fas fa-tag fa-2x"></i>
                                 </div>
-                                <div class = "trash" style="z-index:100">
+                                <div class = "trash">
                                     <i class="fas fa-trash-alt fa-2x"></i>
                                 </div>
-                                <div class = "image-tags">
-                                    #tags
-                                </div>
                             </div>
-                    {% endfor %}
-                </a>
+                            <div class = "tag" href="{{url_for('view_image', image_id = imageID)}}">
+                                <i class="fas fa-tag fa-2x"></i>
+                            </div> -->
+                            <!-- <div class = "edit">
+                                <i class="fas fa-tag fa-2x"></i>
+                            </div> -->
+                            <a class="venobox" data-gall="myGallery" data-title="{{imageUrl}}" href= "#" data-href="{{imageUrl}}">
+                                <div class = "thumbnail" style="background-image:url({{imageUrl}}); background-size: cover; background-position: 50%">
+                                    <div class = "image-tags">
+                                        #tags
+                                    </div>
+                                </div>
+                                <a class="edit" href = "http://google.com"><i class="fas fa-tag fa-2x"></i></a>
+                            </a>
+                        {% endfor %}
                 </div>
         </div>
     </div>
