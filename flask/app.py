@@ -137,6 +137,7 @@ def load_delete():
     imageUrlArr = [picture['url'] for picture in jsonDict['pictures']]
     return render_template('deletePhotos.html', imageArr=imageUrlArr)
 
+@app.route("/image")
 @app.route("/image/<image_id>", methods=['GET'])
 def view_image(image_id):
     print image_id
@@ -144,6 +145,9 @@ def view_image(image_id):
     jsonDict = json.loads(req.text)
     if jsonDict['success']:
         image_url = jsonDict['url']
+        # wordlist = json.loads(request.args.get('wordlist'))
+        # do some stuff
+        # print(jsonify(result=wordlist))
         try:
             return render_template("viewImage.html", imageID=image_id, imageURL = image_url)
         except Exception, e:

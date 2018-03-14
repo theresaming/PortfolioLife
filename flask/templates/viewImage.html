@@ -1,5 +1,10 @@
 {% extends "layout.html" %}
+{% block head %}
+<!-- TAGS INPUT -->
+<link href="/static/bootstrap-tagsinput.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css">
 
+{% endblock %}
 {% block body %}
 
 {% if not session['logged_in'] %}
@@ -36,6 +41,16 @@
     $('input').tagsinput({
       allowDuplicates: false
     });
+    var list = $("input").tagsinput('items');
+    console.log(list);
+
+    $.getJSON($SCRIPT_ROOT + '/image/', {
+        wordlist = JSON.stringify(list)
+        console.log(wordlist)},
+        function(data) {
+            console.log(data.result)
+            $("#result").text(data.result);
+        })
 </script>
 
 {% endblock %}
