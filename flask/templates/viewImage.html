@@ -25,11 +25,17 @@
     </div>
 </div>
 
-<input type="text" value="" data-role="tagsinput" id="tags" class="form-control" style="border: none;line-height: 5;" >
+<center>
+<input type="text" value="" data-role="tagsinput" placeholder="Add tags" />
+</center>
 {% endif %}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js">></script>
 <script src="/static/scripts/bootstrap-tagsinput.js"></script>
-
+<script>
+    $('input').tagsinput({
+      allowDuplicates: false
+    });
+</script>
 
 {% endblock %}
