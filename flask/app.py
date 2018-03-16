@@ -112,22 +112,25 @@ def load_upload():
 def upload_file():
     if request.method == 'POST':
         f = request.files['file']
-        # saves files locally
-        # f.save(secure_filename(f.filename))
-        if f.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if f and allowed_file(f.filename):
-            filename = secure_filename(f.filename)
-            print request.cookies.get('token')
-            req = requests.post(api_upload,
-                                headers={'token': request.cookies.get('token')},
-                                files={'files': (filename, f, None, None)})
-            jsonDict = json.loads(req.text)
-            if jsonDict['success']: # if upload successful
-                return load_home()
-            else:
-                return str(req.status_code) + ': ' + jsonDict['message']
+        # print f
+        allFiles = request.files.getlist('file')
+        imgList = []
+        for f in allFiles:
+            if f.filename == '':
+                flash('No selected file')
+                return redirect(request.url)
+            if f and allowed_file(f.filename):
+                #TODO: Change to mass upload
+                filename = secure_filename(f.filename)
+                print request.cookies.get('token')
+                req = requests.post(api_upload,
+                                    headers={'token': request.cookies.get('token')},
+                                    files={'files': (filename, f, None, None)})
+                jsonDict = json.loads(req.text)
+                if jsonDict['success']: # if upload successful
+                    return load_home()
+                else:
+                    return str(req.status_code) + ': ' + jsonDict['message']
 
 
 @app.route("/delete", methods = ['GET'])
