@@ -254,7 +254,7 @@ func getUsersPicturesAndRefreshURL(user *User, limit int, page int) (pictures []
 
 	db.Limit(limit).Offset(offset).Where("user_id = ?", user.ID).Find(&pictures)
 	goodTime := time.Now().Add(10 * time.Minute)
-	for _, picture := range pictures {
+	for i, picture := range pictures {
 		if picture.ExpirationTime.Before(goodTime) {
 			url, err := refreshURL(&picture)
 			if err != nil {
@@ -263,6 +263,9 @@ func getUsersPicturesAndRefreshURL(user *User, limit int, page int) (pictures []
 			picture.ValidURL = url
 			picture.ExpirationTime = time.Now().Add(urlExpirationDuration)
 			db.Save(&picture)
+		}
+		if tags, err := getTags(&picture); err == nil {
+			pictures[i].Tags = tags
 		}
 	}
 

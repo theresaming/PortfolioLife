@@ -169,18 +169,21 @@ func getUsersPicturesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	type paginatedPicture struct {
-		Mask string `json:"pictureID"`
-		URL  string `json:"url"`
+		Mask string   `json:"pictureID"`
+		URL  string   `json:"url"`
+		Tags []string `json:"tags"`
 	}
 
 	pictures, page, maxPages := getUsersPicturesAndRefreshURL(s.user, limit, page)
 	paginated := make([]paginatedPicture, len(pictures))
 
-	var i int
-	for _, p := range pictures {
+	for i, p := range pictures {
 		paginated[i].Mask = p.Mask
 		paginated[i].URL = p.ValidURL
-		i++
+		paginated[i].Tags = make([]string, len(p.Tags))
+		for j, t := range p.Tags {
+			paginated[i].Tags[j] = t.Tag
+		}
 	}
 
 	resp := struct {
