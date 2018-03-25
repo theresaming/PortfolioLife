@@ -39,13 +39,24 @@ type Picture struct {
 	ValidURL       string `gorm:"type:varchar(1024)"`
 	ExpirationTime time.Time
 
-	// TODO: more metadata here
+	// No need for a backreference from picture->albums
+	// Albums []Album `gorm:"many2many:picture_in_album;"`
 
-	Albums []Album `gorm:"many2many:picture_in_album;AssociationForeignKey:albumID;ForeignKey:picture_mask;"`
-
-	Tags []Tag `gorm:"ForeignKey:picture_mask;PRELOAD:false;"`
+	Tags []Tag `gorm:"ForeignKey:picture_mask;PRELOAD:true;"`
 
 	PictureShare PictureShare
+}
+
+// An Album is a collection of a users photos
+type Album struct {
+	CreatedAt time.Time
+	UserID    uint   `gorm:"size:11;"`
+	Title     string `gorm:"type:varchar(256)"`
+	Mask      string `gorm:"unique;type:varchar(512);primary_key;"` // portfoliolife.com/album/mask
+
+	Pictures []Picture `gorm:"many2many:album_has_pictures;"`
+
+	AlbumShare AlbumShare
 }
 
 // A Tag is metadata on a photo
@@ -53,19 +64,6 @@ type Tag struct {
 	CreatedAt   time.Time
 	PictureMask string `gorm:"primary_key;type:varchar(32);index"`
 	Tag         string `gorm:"primary_key;type:varchar(256)"`
-}
-
-// An Album is a collection of a users photos
-type Album struct {
-	CreatedAt time.Time
-	AlbumID   uint   `gorm:"primary_key;AUTO_INCREMENT;size:11"`
-	UserID    uint   `gorm:"size:11;"`
-	Title     string `gorm:"type:varchar(256)"`
-	Mask      string `gorm:"unique;type:varchar(512)"` // portfoliolife.com/album/mask
-
-	Pictures []Picture
-
-	AlbumShare AlbumShare
 }
 
 // A Registration is details on a user's pending registration

@@ -145,6 +145,14 @@ var apiRoutes = routes{
 		Validation:  true,
 		HandlerFunc: tagFuzzySearch,
 	},
+
+	// Album routes
+	route{
+		Method:      "POST",
+		Pattern:     "/album",
+		Validation:  true,
+		HandlerFunc: createAlbumHandler,
+	},
 }
 
 func logHandler(h http.HandlerFunc) http.HandlerFunc {
