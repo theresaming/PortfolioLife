@@ -9,39 +9,17 @@ var rafID = null;
 var analyserContext = null;
 var canvasWidth, canvasHeight;
 var recIndex = 0;
+var toggledOnce = false;
 
-// function drawBuffer( width, height, context, data ) {
-//     var step = Math.ceil( data.length / width );
-//     var amp = height / 2;
-//     context.fillStyle = "silver";
-//     context.clearRect(0,0,width,height);
-//     for(var i=0; i < width; i++){
-//         var min = 1.0;
-//         var max = -1.0;
-//         for (j=0; j<step; j++) {
-//             var datum = data[(i*step)+j];
-//             if (datum < min)
-//                 min = datum;
-//             if (datum > max)
-//                 max = datum;
-//         }
-//         context.fillRect(i,(1+min)*amp,1,Math.max(1,(max-min)*amp));
-//     }
-// }
 
-function gotBuffers( buffers ) {
-    var canvas = document.getElementById( "wavedisplay" );
-
-    // drawBuffer( canvas.width, canvas.height, canvas.getContext('2d'), buffers[0] );
-
-    // the ONLY time gotBuffers is called is right after a new recording is completed -
-    // so here's where we should set up the download.
-    // audioRecorder.exportWAV( doneEncoding );
+function exportAudio() {
+    audioRecorder.exportWAV( doneEncoding );
 }
 
-// function doneEncoding( blob ) {
-//     recIndex++;
-// }
+function doneEncoding( blob ) {
+    Recorder.setupDownload( blob, "myRecording" + ((recIndex<10)?"0":"") + recIndex + ".wav" );
+    recIndex++;
+}
 
 function toggleRecording( e ) {
     var analyzer = document.getElementById("analyzer");
@@ -51,9 +29,9 @@ function toggleRecording( e ) {
         // stop recording
         audioRecorder.stop();
         e.classList.remove("recording");
-        audioRecorder.getBuffers( gotBuffers );
-        analyzer.style.visibility = "hidden";
-        button.innerText = "How can we help you?";
+        audioRecorder.getBuffers( exportAudio );
+        // analyzer.style.visibility = "hidden";
+        // button.innerText = "How can we help you?";
     } else {
         // start recording
         if (!audioRecorder)
@@ -63,6 +41,14 @@ function toggleRecording( e ) {
         audioRecorder.record();
         analyzer.style.visibility = "visible";
         button.innerText = "Listening...";
+    }
+}
+
+function activateSubmit() {
+    if (toggledOnce) {
+        document.getElementById("audioForm").submit();
+    } else {
+        toggledOnce = true;
     }
 }
 
@@ -152,9 +138,6 @@ function initAudio() {
         });
 }
 
-function spacebarActivation() {
-
-}
 
 window.addEventListener('load', initAudio );
 

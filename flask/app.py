@@ -98,9 +98,20 @@ def load_home():
         else:
             flash(jsonDict['message'])
             pictureUrlArr = []
-        return render_template('home.html', pictureArr = pictureArr, pictureUrlArr=pictureUrlArr, pictureIDArr=pictureIDArr)
+
+        return render_template('home.html', pictureArr=pictureArr, pictureUrlArr=pictureUrlArr, pictureIDArr=pictureIDArr)
     else:
         return login()
+
+
+@app.route("/process-audio", methods=['POST'])
+def process_audio():
+    # Process voice request
+    if request.method == 'POST':
+        url = request.form["url_field"]
+        url.replace("blob:", "")
+    # TODO call google from here
+    return render_template('process-audio.html', url=url)
 
 
 @app.route("/upload")
