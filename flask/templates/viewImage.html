@@ -30,13 +30,14 @@
 </div>
 
 <center>
-<input type="text" value="" placeholder= "add a tag" data-role="tagsinput" />
+<input type="text" value="" placeholder= "" data-role="tagsinput" />
 </center>
 
+<span id="result"></span>
 <div class = "container">
     <div class = "row">
         <div class="twelve columns">
-            <a class="button" href="#">Submit Tags</a>
+            <a class="button" id="save-tags" href="#">Submit Tags</a>
         </div>
     </div>
 </div>
@@ -49,16 +50,37 @@
       allowDuplicates: false
     });
 
-    var list = $("input").tagsinput('items');
-    console.log(list);
+    // $.getJSON($SCRIPT_ROOT + '/image/', {
+    //     wordlist = JSON.stringify(list)
+    //     console.log(wordlist)},
+    //     function(data) {
+    //         console.log(data.result)
+    //         $("#result").text(data.result);
+    //     })
 
-    $.getJSON($SCRIPT_ROOT + '/image/', {
-        wordlist = JSON.stringify(list)
-        console.log(wordlist)},
-        function(data) {
-            console.log(data.result)
-            $("#result").text(data.result);
-        })
+    document.getElementById("save-tags").onclick = function() {myFunction()};
+
+    function myFunction() {
+        var imageid = "{{ imageID }},";
+        var imageurl = "{{ imageURL }},";
+        var list = $("input").tagsinput('items');
+        console.log(list[1]);
+        var javascript_data = JSON.stringify(imageurl + imageid + list[1]);
+        console.log(javascript_data);
+        $.ajax({
+            url: '/image/{{ imageID }}/tagged',
+            data: javascript_data,
+            contentType: 'application/json;charset=UTF-8',
+            type: 'POST',
+            success: function(response) {
+                console.log(response);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+
+    }
 </script>
 
 {% endblock %}

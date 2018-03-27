@@ -26,9 +26,9 @@ def login():
 def do_admin_login():
     if request.method == 'POST':
         email = request.form['email']
-        print email
+        # print email
         password = request.form['password']
-        print password
+        # print password
         data = {
             "email": email,
             "password": password
@@ -143,7 +143,7 @@ def load_delete():
 @app.route("/image")
 @app.route("/image/<image_id>", methods=['GET'])
 def view_image(image_id):
-    print image_id
+    # print image_id
     req = requests.get(api_photo_view + image_id, headers={'token': request.cookies.get('token')})
     jsonDict = json.loads(req.text)
     if jsonDict['success']:
@@ -163,6 +163,15 @@ def delete_image(image_id):
     if jsonDict['success']:
         return load_home()
 
+@app.route('/image/<image_id>/tagged', methods = ['POST', 'GET'])
+def get_post_javascript_data(image_id):
+    if request.method == "POST":
+        jsdata = request.data
+        jsdata = jsdata[1:len(jsdata) - 1]
+        jsdata = jsdata.split(",")
+        print jsdata
+        # return render_template("viewImage.html", imageID=jsdata[1], imageURL=jsdata[0], tags=jsdata[1:])
+        return view_image(image_id)
 
 if __name__ == "__main__":
     app.run(debug=False,host='0.0.0.0', port=5000)
