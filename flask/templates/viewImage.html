@@ -1,10 +1,9 @@
 {% extends "layout.html" %}
-{% block head %}
-<!-- TAGS INPUT -->
-<link href="/static/bootstrap-tagsinput.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css">
-
+{% block title %}
+    PortfolioLife - Edit Image Tags
 {% endblock %}
+
+
 {% block body %}
 
 {% if not session['logged_in'] %}
@@ -31,8 +30,16 @@
 </div>
 
 <center>
-<input type="text" value="" data-role="tagsinput" placeholder="Add tags" />
+<input type="text" value="" placeholder= "add a tag" data-role="tagsinput" />
 </center>
+
+<div class = "container">
+    <div class = "row">
+        <div class="twelve columns">
+            <a class="button" href="#">Submit Tags</a>
+        </div>
+    </div>
+</div>
 {% endif %}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js">></script>
@@ -41,6 +48,7 @@
     $('input').tagsinput({
       allowDuplicates: false
     });
+
     var list = $("input").tagsinput('items');
     console.log(list);
 
