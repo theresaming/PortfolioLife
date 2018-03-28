@@ -108,11 +108,11 @@ DEALINGS IN THE SOFTWARE.
 
     Recorder.setupDownload = function(blob, filename){
         var url = (window.URL || window.webkitURL).createObjectURL(blob);
-        var dataField = document.getElementById("save");
-        dataField.value = url;
-
-        // The following line makes the audio download-able.
-        // link.download = filename || 'output.wav';
+        var dlA = document.getElementById("save-link");
+        // var dlLink = document.getElementById("save");
+        dlA.href = url;
+        dlA.download = filename || 'output.wav';
+        // dlLink.value = url;
     }
 
     window.Recorder = Recorder;

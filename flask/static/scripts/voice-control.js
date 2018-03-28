@@ -30,8 +30,8 @@ function toggleRecording( e ) {
         audioRecorder.stop();
         e.classList.remove("recording");
         audioRecorder.getBuffers( exportAudio );
-        // analyzer.style.visibility = "hidden";
-        // button.innerText = "How can we help you?";
+        analyzer.style.visibility = "hidden";
+        button.innerText = "How can we help you?";
     } else {
         // start recording
         if (!audioRecorder)
@@ -44,10 +44,18 @@ function toggleRecording( e ) {
     }
 }
 
-function activateSubmit() {
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function activateSubmit() {
+    console.log("activate");
     if (toggledOnce) {
+        console.log("toggled");
+        await sleep(200);
         document.getElementById("audioForm").submit();
     } else {
+        console.log("not tog");
         toggledOnce = true;
     }
 }

@@ -77,8 +77,10 @@
         <div class="footer-voice">
             <canvas id="analyzer" class="voice-vis"></canvas>
                 <form action="{{ url_for('process_audio') }}" method="post" id="audioForm">
-                    <input id="save" type="hidden" name="url_field" value="#">
-                    <button onmousedown="toggleRecording(this);" onmouseup="activateSubmit(this);" type="button" id="voice-button">How can we help you?</button>
+{#                    <input id="save" type="hidden" name="url_field" value="#">#}
+                    <a id="save-link" href="#">
+                        <button onmousedown="toggleRecording(this);" onmouseup="activateSubmit();" type="button" id="voice-button">How can we help you?</button>
+                    </a>
                 </form>
         </div>
     {% endif %}

@@ -106,12 +106,8 @@ def load_home():
 
 @app.route("/process-audio", methods=['POST'])
 def process_audio():
-    # Process voice request
-    if request.method == 'POST':
-        url = request.form["url_field"]
-        url.replace("blob:", "")
-    # TODO call google from here
-    return render_template('process-audio.html', url=url)
+
+    return render_template('process-audio.html')
 
 
 @app.route("/upload")
