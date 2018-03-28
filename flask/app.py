@@ -173,6 +173,12 @@ def get_post_javascript_data(image_id):
         # return render_template("viewImage.html", imageID=jsdata[1], imageURL=jsdata[0], tags=jsdata[1:])
         return view_image(image_id)
 
+
+@app.route("/create-album")
+def load_create_album():
+    return render_template('addAlbum.html')
+
+
 if __name__ == "__main__":
     app.run(debug=False,host='0.0.0.0', port=5000)
     # max upload thingy

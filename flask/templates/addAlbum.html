@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class = "container">
+    <div class = "row">
+        <div class = "one columns">
+            <a href="{{ url_for("load_home") }}">
+                <button type="button" id="back-button">Back to Home</button>
+            </a>
+        </div>
+        <div class = "eleven columns">
+            <h3>Create New Album</h3>
+        </div>
+    </div>
+    <div class = "container">
+        <div class = "photo-row">
+            {% for imageUrl in imageArr %}
+                <div class = "photo-col">
+                    <a href = ""><img src= "{{imageUrl}}" /></a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

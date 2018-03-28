@@ -67,7 +67,7 @@ ul {
 
 .spacer {
     width: 100%;
-    height: 66px;
+    height: 4.1em;
 }
 
 .login-screen {
@@ -237,4 +237,8 @@ ul li.selected {
 .image-display {
     max-width: 80%;
     text-align: center;
+}
+
+#back-button {
+    margin-top: 15px;
 }
