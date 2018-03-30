@@ -246,3 +246,10 @@ ul li.selected {
 #back-button {
     margin-top: 15px;
 }
+
+#title-text {
+    width: 100%;
+    padding: 24px 40px;
+    margin: 8px 0;
+    font-size:200%;
+}
