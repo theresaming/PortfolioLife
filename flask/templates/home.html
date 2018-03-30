@@ -17,14 +17,19 @@
                 </div>
             </div>
             <div class = "row">
-                <div class = "six columns">
+                <div class = "four columns">
                     <div class="upload">
                         <a href="{{ url_for('load_upload') }}">Upload Photos</a>
                     </div>
                 </div>
-                <div class = "six columns">
+                <div class = "four columns">
                     <div class="delete-photo">
                         <a href="{{ url_for('load_delete') }}">Delete Photos</a>
+                    </div>
+                </div>
+                <div class = "four columns">
+                    <div class="add-album">
+                        <a href="{{ url_for('load_create_album') }}">Add New Album</a>
                     </div>
                 </div>
             </div>

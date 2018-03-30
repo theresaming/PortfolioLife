@@ -176,7 +176,31 @@ def get_post_javascript_data(image_id):
 
 @app.route("/create-album")
 def load_create_album():
-    return render_template('addAlbum.html')
+    if session.get('logged_in'):
+        token = request.cookies.get('token')
+
+        # Get photos from API
+        getPhotos = requests.get(api_get_photos, headers={'token': token})
+        jsonDict = json.loads(getPhotos.text)
+
+        # Add photos to array
+        if jsonDict['success']:
+            pictureArr = [(picture['url'], picture['pictureID']) for picture in jsonDict['pictures']]
+            pictureUrlArr = [picture['url'] for picture in jsonDict['pictures']]
+            pictureIDArr = [picture['pictureID'] for picture in jsonDict['pictures']]
+        else:
+            flash(jsonDict['message'])
+            pictureUrlArr = []
+        return render_template('addAlbum.html', pictureArr=pictureArr, pictureUrlArr=pictureUrlArr, pictureIDArr=pictureIDArr)
+    else:
+        return login()
+
+
+@app.route("/submit-album", methods=["POST"])
+def submit_album():
+    if request.method == "POST":
+        print request.form
+    return render_template('albumCreated.html')
 
 
 if __name__ == "__main__":
