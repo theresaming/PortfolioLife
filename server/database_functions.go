@@ -7,7 +7,6 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
-	"strings"
 	"time"
 )
 
@@ -359,11 +358,12 @@ func saveAlbum(album *Album) error {
 	defer db.Close()
 	values := make([]string, len(album.Pictures))
 	for i, pic := range album.Pictures {
-		values[i] = fmt.Sprintf("(`%s`, `%s`)", album.Mask, pic.Mask)
+		values[i] = fmt.Sprintf("('%s', '%s')", album.Mask, pic.Mask)
 	}
 	db.Save(album)
-	sql := fmt.Sprintf("INSERT INTO `album_has_pictures` (`album_mask`,`picture_mask`) VALUES %s", strings.Join(values, ", "))
-	return db.Exec(sql).Error
+	return db.Error
+	//sql := fmt.Sprintf("INSERT INTO `album_has_pictures` (`album_mask`,`picture_mask`) VALUES %s", strings.Join(values, ", "))
+	//return db.Exec(sql).Error
 }
 
 /****************

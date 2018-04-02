@@ -91,6 +91,23 @@ func TestGetPictures(t *testing.T) {
 	fmt.Println(pictures)
 }
 
+func TestInsertAlbum(t *testing.T) {
+	testUser := &User{ID: 3}
+
+	p1, _ := getPicture(testUser, "UN5gdZlb2MCdrxgjlfVnTU6t-m3-Cbbr", false)
+	p2, _ := getPicture(testUser, "-RPhn7n0J8PZWekTwoUdFldfV6cyF8G3", false)
+	album := &Album{
+		UserID:   testUser.ID,
+		Title:    "Test Title",
+		Mask:     generateRandomString(32),
+		Pictures: []Picture{*p1, *p2},
+	}
+	err := saveAlbum(album)
+	if err != nil {
+		panic(err)
+	}
+}
+
 func init() {
 	verboseDatabase = true
 }

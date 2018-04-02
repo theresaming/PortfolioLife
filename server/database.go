@@ -49,10 +49,10 @@ type Picture struct {
 
 // An Album is a collection of a users photos
 type Album struct {
+	Mask      string `gorm:"unique;type:varchar(512);primary_key;"`
 	CreatedAt time.Time
 	UserID    uint   `gorm:"size:11;"`
-	Title     string `gorm:"type:varchar(256)"`
-	Mask      string `gorm:"unique;type:varchar(512);primary_key;"` // portfoliolife.com/album/mask
+	Title     string `gorm:"type:varchar(256);"`
 
 	Pictures []Picture `gorm:"many2many:album_has_pictures;"`
 
@@ -62,8 +62,8 @@ type Album struct {
 // A Tag is metadata on a photo
 type Tag struct {
 	CreatedAt   time.Time
-	PictureMask string `gorm:"primary_key;type:varchar(32);index"`
-	Tag         string `gorm:"primary_key;type:varchar(256)"`
+	PictureMask string `gorm:"primary_key;type:varchar(32);index;"`
+	Tag         string `gorm:"primary_key;type:varchar(256);"`
 }
 
 // A Registration is details on a user's pending registration
