@@ -122,6 +122,17 @@ func TestGetNonExistantAlbum(t *testing.T) {
 	fmt.Println(album)
 }
 
+func TestDeleteAlbum(t *testing.T) {
+	albumID := "6B5GFHaXQBRP26wXXcQosNwzGeiHR7SB"
+	album, err := getAlbum(&User{ID: 3}, albumID)
+	if err != nil {
+		panic(err)
+	}
+	if err = deleteAlbum(album); err != nil {
+		panic(err)
+	}
+}
+
 func init() {
 	verboseDatabase = true
 }

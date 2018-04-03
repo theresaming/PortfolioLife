@@ -399,6 +399,26 @@ func getAlbum(user *User, albumID string) (*Album, error) {
 	return &album, nil
 }
 
+func deleteAlbum(album *Album) error {
+	if album == nil {
+		return fmt.Errorf("nil album provided")
+	}
+	db, err := openConnection()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	// Check the primary key!
+	if len(album.Mask) == 0 {
+		return fmt.Errorf("no primary key in provided album to delete")
+	}
+	err = db.Model(album).Association("Pictures").Clear().Error
+	if err != nil {
+		return err
+	}
+	return db.Delete(album).Error
+}
+
 /****************
 *				*
 * Miscellaneous *

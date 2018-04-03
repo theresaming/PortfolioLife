@@ -159,6 +159,12 @@ var apiRoutes = routes{
 		Validation:  true,
 		HandlerFunc: getAlbumHandler,
 	},
+	route{
+		Method:      "DELETE",
+		Pattern:     "/album/{albumID}",
+		Validation:  true,
+		HandlerFunc: deleteAlbumHandler,
+	},
 }
 
 func logHandler(h http.HandlerFunc) http.HandlerFunc {

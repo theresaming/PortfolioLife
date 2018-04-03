@@ -79,7 +79,7 @@ func getAlbumHandler(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	albumID, ok := vars["albumID"]
 	if !ok {
-		writeError(&w, "no picture ID provided", 400)
+		writeError(&w, "no album ID provided", 400)
 		return
 	}
 	s, ok := getSession(auth)
@@ -119,6 +119,50 @@ func getAlbumHandler(w http.ResponseWriter, r *http.Request) {
 		album.Title,
 		album.Mask,
 		albumPictures,
+	}
+	data, err := json.Marshal(resp)
+	if err != nil {
+		panic(err)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(data)
+}
+
+func deleteAlbumHandler(w http.ResponseWriter, r *http.Request) {
+	auth := r.Header.Get("token")
+	vars := mux.Vars(r)
+	albumID, ok := vars["albumID"]
+	if !ok {
+		writeError(&w, "no album ID provided", 400)
+		return
+	}
+	s, ok := getSession(auth)
+	if !ok {
+		writeError(&w, "invalid session, please reload your page", 401)
+		return
+	}
+	album, err := getAlbum(s.user, albumID)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			writeError(&w, "album not found for your user or your album ID", 404)
+			return
+		}
+		writeError(&w, "internal error, please try again later", 500)
+		l.Print(err)
+		return
+	}
+	if err := deleteAlbum(album); err != nil {
+		writeError(&w, "error deleting album, please try again later", 500)
+		l.Print(err)
+		return
+	}
+	resp := struct {
+		*jsonResponse
+	}{
+		&jsonResponse{
+			Success: true,
+			Message: "deleted album",
+		},
 	}
 	data, err := json.Marshal(resp)
 	if err != nil {
