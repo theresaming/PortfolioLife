@@ -94,18 +94,32 @@ func TestGetPictures(t *testing.T) {
 func TestInsertAlbum(t *testing.T) {
 	testUser := &User{ID: 3}
 
-	p1, _ := getPicture(testUser, "UN5gdZlb2MCdrxgjlfVnTU6t-m3-Cbbr", false)
-	p2, _ := getPicture(testUser, "-RPhn7n0J8PZWekTwoUdFldfV6cyF8G3", false)
+	p1, _ := getPicture(testUser, "66mB0HLm-QuNH7o2xip_QVx04F5_OvLA", false)
+	p2, _ := getPicture(testUser, "CNO9tTq4I7H0S-fLBF6wmlE6MeQv6VxP", false)
 	album := &Album{
-		UserID:   testUser.ID,
-		Title:    "Test Title",
-		Mask:     generateRandomString(32),
-		Pictures: []Picture{*p1, *p2},
+		UserID: testUser.ID,
+		Title:  "Test Title",
+		Mask:   generateRandomString(32),
 	}
-	err := saveAlbum(album)
+	err := createAlbum(album, []Picture{*p1, *p2})
 	if err != nil {
 		panic(err)
 	}
+}
+
+func TestGetAlbum(t *testing.T) {
+	albumID := "lCbmAr3xH1PrxYBoKTKHDc62qYVSzEed"
+	album, _ := getAlbum(&User{ID: 3}, albumID)
+	fmt.Printf("\n\n\n%v\n\n", album.Pictures)
+}
+
+func TestGetNonExistantAlbum(t *testing.T) {
+	badID := "badID"
+	album, err := getAlbum(&User{ID: 3}, badID)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(album)
 }
 
 func init() {

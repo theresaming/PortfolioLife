@@ -153,6 +153,12 @@ var apiRoutes = routes{
 		Validation:  true,
 		HandlerFunc: createAlbumHandler,
 	},
+	route{
+		Method:      "GET",
+		Pattern:     "/album/{albumID}",
+		Validation:  true,
+		HandlerFunc: getAlbumHandler,
+	},
 }
 
 func logHandler(h http.HandlerFunc) http.HandlerFunc {

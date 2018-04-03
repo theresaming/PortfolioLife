@@ -40,7 +40,7 @@ type Picture struct {
 	ExpirationTime time.Time
 
 	// No need for a backreference from picture->albums
-	// Albums []Album `gorm:"many2many:picture_in_album;"`
+	Albums []Album `gorm:"many2many:album_has_pictures;"`
 
 	Tags []Tag `gorm:"ForeignKey:picture_mask;PRELOAD:true;"`
 

@@ -366,6 +366,39 @@ func saveAlbum(album *Album) error {
 	//return db.Exec(sql).Error
 }
 
+func createAlbum(album *Album, pictures []Picture) error {
+	db, err := openConnection()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	if err := db.Create(album).Error; err != nil {
+		return err
+	}
+	return db.Model(album).Association("Pictures").Append(pictures).Error
+}
+
+func getAlbum(user *User, albumID string) (*Album, error) {
+	db, err := openConnection()
+	if err != nil {
+		panic(err)
+	}
+	var (
+		album Album
+	)
+	defer db.Close()
+
+	if err := db.Preload("Pictures").Find(&album, "mask = ?", albumID).Error; err != nil {
+		return nil, err
+	}
+
+	for _, pic := range album.Pictures {
+		getPicture(user, pic.Mask, true) // TODO: better way to just refresh the URL
+	}
+
+	return &album, nil
+}
+
 /****************
 *				*
 * Miscellaneous *

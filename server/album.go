@@ -3,6 +3,10 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/jinzhu/gorm"
+
+	"github.com/gorilla/mux"
 )
 
 func createAlbumHandler(w http.ResponseWriter, r *http.Request) {
@@ -37,13 +41,13 @@ func createAlbumHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	album := &Album{
-		UserID:   s.user.ID,
-		Title:    albumMetaData.Title,
-		Mask:     mask,
-		Pictures: pictures,
+		UserID: s.user.ID,
+		Title:  albumMetaData.Title,
+		Mask:   mask,
+		// Pictures: pictures,
 	}
 
-	saveAlbum(album)
+	createAlbum(album, pictures)
 
 	pictureMasks := make([]string, len(album.Pictures))
 	for i, picture := range album.Pictures {
@@ -61,6 +65,60 @@ func createAlbumHandler(w http.ResponseWriter, r *http.Request) {
 		album.Title,
 		album.Mask,
 		pictureMasks,
+	}
+	data, err := json.Marshal(resp)
+	if err != nil {
+		panic(err)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(data)
+}
+
+func getAlbumHandler(w http.ResponseWriter, r *http.Request) {
+	auth := r.Header.Get("token")
+	vars := mux.Vars(r)
+	albumID, ok := vars["albumID"]
+	if !ok {
+		writeError(&w, "no picture ID provided", 400)
+		return
+	}
+	s, ok := getSession(auth)
+	if !ok {
+		writeError(&w, "invalid session, please reload your page", 401)
+		return
+	}
+	album, err := getAlbum(s.user, albumID)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			writeError(&w, "album not found for your user or your album ID", 404)
+			return
+		}
+		writeError(&w, "internal error, please try again later", 500)
+		l.Print(err)
+		return
+	}
+
+	type picResponse struct {
+		Mask string `json:"pictureID"`
+		URL  string `json:"url"`
+	}
+	albumPictures := make([]picResponse, len(album.Pictures))
+	for i, pic := range album.Pictures {
+		albumPictures[i].Mask = pic.Mask
+		albumPictures[i].URL = pic.ValidURL
+	}
+	resp := struct {
+		*jsonResponse
+		Title    string        `json:"title"`
+		Mask     string        `json:"albumID"`
+		Pictures []picResponse `json:"pictures"`
+	}{
+		&jsonResponse{
+			Success: true,
+		},
+		album.Title,
+		album.Mask,
+		albumPictures,
 	}
 	data, err := json.Marshal(resp)
 	if err != nil {
