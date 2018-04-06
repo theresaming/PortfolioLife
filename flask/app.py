@@ -13,6 +13,8 @@ app.secret_key = os.urandom(12)
 app.config['SQLALCHEMY_DATABASE_URI'] = MYSQL_URL
 app.config['OAUTH_CREDENTIALS'] = OAUTH_CREDENTIALS
 
+recentlyCreatedAlbumID = ""
+
 
 @app.route('/')
 def login():
@@ -199,8 +201,51 @@ def load_create_album():
 @app.route("/submit-album", methods=["POST"])
 def submit_album():
     if request.method == "POST":
-        print request.form
-    return render_template('albumCreated.html')
+        data = request.form.to_dict()
+        pictureIDs = []
+        title = "My New Album"
+        for key, value in data.items():
+            if key == 'title':
+                title = value
+            else:
+                pictureIDs.append(key)
+
+        asDict = {'title': title,
+                  'pictureIDs': pictureIDs}
+        asJSON = json.dumps(asDict)
+        req = requests.post(api_album_create,
+                            headers={'token': request.cookies.get('token')},
+                            data=asJSON)
+        jsonDict = json.loads(req.text)
+        if jsonDict['success']:
+            global recentlyCreatedAlbumID
+            recentlyCreatedAlbumID = jsonDict['albumID']
+            return render_template('albumCreated.html', title=jsonDict['title'])
+        else:
+            return str(req.status_code) + ': ' + jsonDict['message']
+    return "Something went wrong!"
+
+
+@app.route("/album/<title>")
+def album_view(title):
+    reqStr = api_album + "/" + recentlyCreatedAlbumID
+    getAlbum = requests.get(reqStr, headers={'token': request.cookies.get('token')})
+    jsonDict = json.loads(getAlbum.text)
+
+    # Add photos to array
+    if jsonDict['success']:
+        pictureArr = [(picture['url'], picture['pictureID']) for picture in jsonDict['pictures']]
+        pictureUrlArr = [picture['url'] for picture in jsonDict['pictures']]
+    else:
+        flash(jsonDict['message'])
+        pictureArr = []
+        pictureUrlArr = []
+    return render_template('albumView.html', pictureArr=pictureArr, pictureUrlArr=pictureUrlArr, title=jsonDict['title'])
+
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html'), 404
 
 
 if __name__ == "__main__":

@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block body %}
+    <div class = "container">
+        <div class = "row">
+            <div class = "twelve columns">
+                <h3>"{{ title }}": got here!</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class = "container">
+        <div class = "row" style="margin-top: 2em">
+                <div class = "photo-grid">
+                        {% for imageUrl, imageID in pictureArr %}
+                            <a class="venobox" data-gall="myGallery" data-title="{{imageUrl}}" href= "#" data-href="{{imageUrl}}">
+                                <div class = "thumbnail" style="background-image:url({{imageUrl}}); background-size: cover; background-position: 50%">
+                                    <div class = "image-tags">
+                                        #tags
+                                    </div>
+                                </div>
+                                <a class="edit" href = "{{ url_for('view_image', image_id = imageID)}}"><i class="fas fa-tag fa-2x"></i></a>
+                                <a class="delete" href = "{{ url_for('delete_image', image_id = imageID)}}"><i class = "fas fa-trash-alt fa-2x"></i></a>
+                            </a>
+                        {% endfor %}
+                </div>
+        </div>
+    </div>
+{% endblock %}
