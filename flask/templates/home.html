@@ -5,6 +5,12 @@
 {% if not session['logged_in'] %}
     <p>You're not logged in!</p>
 {% else %}
+    <div class="home-menu">
+        <ul class="home-bar">
+          <li class="home-bar-item first"><a class="home-link active" href="{{ url_for("load_home") }}">My Photos</a></li>
+          <li class="home-bar-item second"><a class="home-link" href="{{ url_for("load_home_albums") }}">My Albums</a></li>
+        </ul>
+    </div>
     <div class="logout">
         <input type="text" id="link-box" placeholder="Search"/>
         <input type="button" id="search-button" value="Search" style="background-color: white"/>

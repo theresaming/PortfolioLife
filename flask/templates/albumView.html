@@ -3,13 +3,20 @@
 {% block body %}
     <div class = "container">
         <div class = "row">
-            <div class = "twelve columns">
-                <h3>"{{ title }}": got here!</h3>
+            <div class = "one columns">
+                <a href="{{ url_for("load_home") }}">
+                    <button type="button" id="back-button">Back to Home</button>
+                </a>
+            </div>
+            <div class = "ten columns">
+                <h3>{{ title }}</h3>
+            </div>
+            <div class = "one columns">
+                <a href="{{ url_for("edit_album") }}">
+                    <button type="button" id="back-button">Edit Album</button>
+                </a>
             </div>
         </div>
-    </div>
-
-    <div class = "container">
         <div class = "row" style="margin-top: 2em">
                 <div class = "photo-grid">
                         {% for imageUrl, imageID in pictureArr %}
@@ -20,10 +27,31 @@
                                     </div>
                                 </div>
                                 <a class="edit" href = "{{ url_for('view_image', image_id = imageID)}}"><i class="fas fa-tag fa-2x"></i></a>
-                                <a class="delete" href = "{{ url_for('delete_image', image_id = imageID)}}"><i class = "fas fa-trash-alt fa-2x"></i></a>
                             </a>
                         {% endfor %}
                 </div>
         </div>
     </div>
+
+    <script src="/static/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/static/scripts/venobox.min.js"></script>
+    <script src="/static/scripts/fontawesome-all.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <script>
+    $(document).ready(function(){
+        $('.venobox').venobox({
+        titleattr: 'data-title',    // default: 'title'
+        titlePosition: 'bottom'
+    });
+
+    });
+    function runSelect(venobox) {
+        var test = $('.venobox').venobox();
+        test.removeData();
+    }
+
+    function runGallery() {
+        $('.venobox').venobox();
+    }
+    </script>
 {% endblock %}

@@ -105,6 +105,14 @@ def load_home():
         return login()
 
 
+@app.route("/albums")
+def load_home_albums():
+    if session.get('logged_in'):
+        return render_template('home-albums.html')
+    else:
+        return login()
+
+
 @app.route("/upload")
 def load_upload():
     return render_template('uploadPhotos.html')
@@ -241,6 +249,11 @@ def album_view(title):
         pictureArr = []
         pictureUrlArr = []
     return render_template('albumView.html', pictureArr=pictureArr, pictureUrlArr=pictureUrlArr, title=jsonDict['title'])
+
+
+@app.route("/stretch/albumEdit")
+def edit_album():
+    return render_template('editAlbum.html')
 
 
 @app.errorhandler(404)
