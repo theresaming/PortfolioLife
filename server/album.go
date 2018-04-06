@@ -198,7 +198,7 @@ func getAllAlbumsHandler(w http.ResponseWriter, r *http.Request) {
 
 	resp := struct {
 		*jsonResponse
-		Meta []albumMeta
+		Meta []albumMeta `json:"albums"`
 	}{
 		&jsonResponse{
 			Success: true,
