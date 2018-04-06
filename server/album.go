@@ -171,3 +171,44 @@ func deleteAlbumHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(data)
 }
+
+func getAllAlbumsHandler(w http.ResponseWriter, r *http.Request) {
+	auth := r.Header.Get("token")
+
+	s, ok := getSession(auth)
+	if !ok {
+		writeError(&w, "invalid session, please reload your page", 401)
+		return
+	}
+	albums, err := getAllAlbums(s.user)
+	if err != nil {
+		writeError(&w, "internal error retrieving album, try again later", 500)
+		l.Println(err)
+		return
+	}
+	type albumMeta struct {
+		Title string `json:"title"`
+		Mask  string `json:"albumID"`
+	}
+	meta := make([]albumMeta, len(albums))
+	for i, album := range albums {
+		meta[i].Title = album.Title
+		meta[i].Mask = album.Mask
+	}
+
+	resp := struct {
+		*jsonResponse
+		Meta []albumMeta
+	}{
+		&jsonResponse{
+			Success: true,
+		},
+		meta,
+	}
+	data, err := json.Marshal(resp)
+	if err != nil {
+		panic(err)
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(data)
+}

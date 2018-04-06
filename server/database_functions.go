@@ -419,6 +419,18 @@ func deleteAlbum(album *Album) error {
 	return db.Delete(album).Error
 }
 
+func getAllAlbums(user *User) ([]Album, error) {
+	db, err := openConnection()
+	if err != nil {
+		panic(err)
+	}
+	var (
+		albums []Album
+	)
+	err = db.Model(user).Related(&albums, "Albums").Error
+	return albums, err
+}
+
 /****************
 *				*
 * Miscellaneous *

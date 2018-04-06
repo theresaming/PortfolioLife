@@ -133,6 +133,13 @@ func TestDeleteAlbum(t *testing.T) {
 	}
 }
 
+func TestGetAllAlbums(t *testing.T) {
+	albums := getAllAlbums(&User{ID: 3})
+	for _, album := range albums {
+		fmt.Println(album.Title)
+	}
+}
+
 func init() {
 	verboseDatabase = true
 }
