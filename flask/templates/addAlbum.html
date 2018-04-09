@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class = "container">
+    <div class = "row">
+        <div class = "one columns">
+            <a href="{{ url_for("load_home") }}">
+                <button type="button" id="back-button" onclick="return confirm('Are you sure you want to leave?');">Back to Home</button>
+            </a>
+        </div>
+        <div class = "eleven columns">
+            <h3>Create New Album</h3>
+        </div>
+    </div>
+
+    <script src="/static/scripts/portfolioLifeLib.js"></script>
+
+    <form method="POST" action="{{ url_for("submit_album") }}">
+    <div class = "container">
+        <input type="text" name="title" id="title-text" placeholder="What is this album called?" style="border:1px solid #777777">
+    </div>
+    <div class = "container">
+        <div class = "row" style="margin-top: 2em">
+                <div class = "photo-grid">
+                    {% for imageUrl, imageID in pictureArr %}
+                        <input class="imgCheckbox" type="checkbox" id="{{ imageID }}" name="{{ imageID }}" value="{{ imageUrl }}" onclick="checkImageSelect(this.id);" style="display: none;"/>
+                        <label for="{{  imageID }}"><img id="img{{ imageID }}" class="thumbnail" style="background-image:url({{imageUrl}}); background-size: cover; background-position: 50%; border:3px solid #FFFFFF" /></label>
+                    {% endfor %}
+                </div>
+                <button type="submit" id="album-submit" onclick="return albumValidation();">Submit</button>
+        </div>
+    </div>
+    </form>
+
+</div>
+
+{% endblock %}

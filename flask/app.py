@@ -13,6 +13,8 @@ app.secret_key = os.urandom(12)
 app.config['SQLALCHEMY_DATABASE_URI'] = MYSQL_URL
 app.config['OAUTH_CREDENTIALS'] = OAUTH_CREDENTIALS
 
+recentlyCreatedAlbumID = ""
+
 
 @app.route('/')
 def login():
@@ -103,6 +105,26 @@ def load_home():
         return login()
 
 
+@app.route("/albums")
+def load_home_albums():
+    if session.get('logged_in'):
+        token = request.cookies.get('token')
+
+        # Get photos from API
+        getAlbums = requests.get(api_album, headers={'token': token})
+        jsonDict = json.loads(getAlbums.text)
+
+        if jsonDict['success']:
+            albumIdTitle = [(a['title'], a['albumID']) for a in jsonDict['albums']]
+        else:
+            flash(jsonDict['message'])
+            albumIdTitle = []
+        print albumIdTitle
+        return render_template('home-albums.html', albumData=albumIdTitle)
+    else:
+        return login()
+
+
 @app.route("/upload")
 def load_upload():
     return render_template('uploadPhotos.html')
@@ -172,6 +194,95 @@ def get_post_javascript_data(image_id):
         print jsdata
         # return render_template("viewImage.html", imageID=jsdata[1], imageURL=jsdata[0], tags=jsdata[1:])
         return view_image(image_id)
+
+
+@app.route("/create-album")
+def load_create_album():
+    if session.get('logged_in'):
+        token = request.cookies.get('token')
+
+        # Get photos from API
+        getPhotos = requests.get(api_get_photos, headers={'token': token})
+        jsonDict = json.loads(getPhotos.text)
+
+        # Add photos to array
+        if jsonDict['success']:
+            pictureArr = [(picture['url'], picture['pictureID']) for picture in jsonDict['pictures']]
+            pictureUrlArr = [picture['url'] for picture in jsonDict['pictures']]
+            pictureIDArr = [picture['pictureID'] for picture in jsonDict['pictures']]
+        else:
+            flash(jsonDict['message'])
+            pictureUrlArr = []
+        return render_template('addAlbum.html', pictureArr=pictureArr, pictureUrlArr=pictureUrlArr, pictureIDArr=pictureIDArr)
+    else:
+        return login()
+
+
+@app.route("/submit-album", methods=["POST"])
+def submit_album():
+    if request.method == "POST":
+        data = request.form.to_dict()
+        pictureIDs = []
+        title = "My New Album"
+        for key, value in data.items():
+            if key == 'title':
+                title = value
+            else:
+                pictureIDs.append(key)
+
+        asDict = {'title': title,
+                  'pictureIDs': pictureIDs}
+        asJSON = json.dumps(asDict)
+        req = requests.post(api_album_create,
+                            headers={'token': request.cookies.get('token')},
+                            data=asJSON)
+        jsonDict = json.loads(req.text)
+        if jsonDict['success']:
+            return render_template('albumCreated.html', title=jsonDict['title'], albumId=jsonDict['albumID'])
+        else:
+            return str(req.status_code) + ': ' + jsonDict['message']
+    return "Something went wrong!"
+
+
+@app.route("/album/<title>/<albumId>")
+def album_view(title, albumId):
+    reqStr = api_album + "/" + albumId
+    getAlbum = requests.get(reqStr, headers={'token': request.cookies.get('token')})
+    jsonDict = json.loads(getAlbum.text)
+
+    # Add photos to array
+    if jsonDict['success']:
+        pictureArr = [(picture['url'], picture['pictureID']) for picture in jsonDict['pictures']]
+        pictureUrlArr = [picture['url'] for picture in jsonDict['pictures']]
+    else:
+        flash(jsonDict['message'])
+        pictureArr = []
+        pictureUrlArr = []
+    return render_template('albumView.html', pictureArr=pictureArr, pictureUrlArr=pictureUrlArr, title=title, albumId=albumId)
+
+
+@app.route("/stretch/albumEdit")
+def edit_album():
+    return render_template('editAlbum.html')
+
+
+@app.route("/album/delete/<albumId>")
+def delete_album(albumId):
+    reqStr = api_album + "/" + albumId
+    delAlbum = requests.delete(reqStr, headers={'token': request.cookies.get('token')})
+    jsonDict = json.loads(delAlbum.text)
+
+    if jsonDict['success']:
+        flash("Album deleted!")
+    else:
+        flash(jsonDict['message'])
+    return load_home_albums()
+
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html'), 404
+
 
 if __name__ == "__main__":
     app.run(debug=False,host='0.0.0.0', port=5000)
