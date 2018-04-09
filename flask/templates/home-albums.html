@@ -45,7 +45,7 @@
         <div class = "row" style="margin-top: 2em">
             <ul>
                 {% for albumTitle, albumID in albumData %}
-                    <a href= "{{ url_for("album_view", title=albumTitle, id=albumID) }}">
+                    <a href= "{{ url_for("album_view", title=albumTitle, albumId=albumID) }}">
                         <li>{{ albumTitle }}</li>
                     </a>
                 {% endfor %}

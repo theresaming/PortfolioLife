@@ -238,15 +238,15 @@ def submit_album():
                             data=asJSON)
         jsonDict = json.loads(req.text)
         if jsonDict['success']:
-            return render_template('albumCreated.html', title=jsonDict['title'], id=jsonDict['albumID'])
+            return render_template('albumCreated.html', title=jsonDict['title'], albumId=jsonDict['albumID'])
         else:
             return str(req.status_code) + ': ' + jsonDict['message']
     return "Something went wrong!"
 
 
-@app.route("/album/<title>/<id>")
-def album_view(title, id):
-    reqStr = api_album + "/" + id
+@app.route("/album/<title>/<albumId>")
+def album_view(title, albumId):
+    reqStr = api_album + "/" + albumId
     getAlbum = requests.get(reqStr, headers={'token': request.cookies.get('token')})
     jsonDict = json.loads(getAlbum.text)
 
@@ -258,12 +258,25 @@ def album_view(title, id):
         flash(jsonDict['message'])
         pictureArr = []
         pictureUrlArr = []
-    return render_template('albumView.html', pictureArr=pictureArr, pictureUrlArr=pictureUrlArr, title=title)
+    return render_template('albumView.html', pictureArr=pictureArr, pictureUrlArr=pictureUrlArr, title=title, albumId=albumId)
 
 
 @app.route("/stretch/albumEdit")
 def edit_album():
     return render_template('editAlbum.html')
+
+
+@app.route("/album/delete/<albumId>")
+def delete_album(albumId):
+    reqStr = api_album + "/" + albumId
+    delAlbum = requests.delete(reqStr, headers={'token': request.cookies.get('token')})
+    jsonDict = json.loads(delAlbum.text)
+
+    if jsonDict['success']:
+        flash("Album deleted!")
+    else:
+        flash(jsonDict['message'])
+    return load_home_albums()
 
 
 @app.errorhandler(404)

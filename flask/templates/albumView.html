@@ -8,12 +8,17 @@
                     <button type="button" id="back-button">Back to Home</button>
                 </a>
             </div>
-            <div class = "ten columns">
+            <div class = "nine columns">
                 <h3>{{ title }}</h3>
             </div>
             <div class = "one columns">
                 <a href="{{ url_for("edit_album") }}">
-                    <button type="button" id="back-button">Delete Album</button>
+                    <button type="button" id="edit-button" style="padding: 0 10px;">Edit</button>
+                </a>
+            </div>
+            <div class = "one columns">
+                <a href="{{ url_for("delete_album", albumId=albumId) }}">
+                    <button type="button" id="delete-button" style="padding: 0 10px; color:#cc1e00;" onclick="return confirm('Are you sure you want to delete {{ title }}? This CANNOT be undone!');">Delete</button>
                 </a>
             </div>
         </div>

@@ -243,7 +243,7 @@ ul li.selected {
     text-align: center;
 }
 
-#back-button {
+#back-button, #edit-button, #delete-button {
     margin-top: 15px;
 }
 
