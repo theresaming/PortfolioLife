@@ -108,7 +108,19 @@ def load_home():
 @app.route("/albums")
 def load_home_albums():
     if session.get('logged_in'):
-        return render_template('home-albums.html')
+        token = request.cookies.get('token')
+
+        # Get photos from API
+        getAlbums = requests.get(api_album, headers={'token': token})
+        jsonDict = json.loads(getAlbums.text)
+
+        if jsonDict['success']:
+            albumIdTitle = [(a['title'], a['albumID']) for a in jsonDict['albums']]
+        else:
+            flash(jsonDict['message'])
+            albumIdTitle = []
+        print albumIdTitle
+        return render_template('home-albums.html', albumData=albumIdTitle)
     else:
         return login()
 
@@ -226,17 +238,15 @@ def submit_album():
                             data=asJSON)
         jsonDict = json.loads(req.text)
         if jsonDict['success']:
-            global recentlyCreatedAlbumID
-            recentlyCreatedAlbumID = jsonDict['albumID']
-            return render_template('albumCreated.html', title=jsonDict['title'])
+            return render_template('albumCreated.html', title=jsonDict['title'], id=jsonDict['albumID'])
         else:
             return str(req.status_code) + ': ' + jsonDict['message']
     return "Something went wrong!"
 
 
-@app.route("/album/<title>")
-def album_view(title):
-    reqStr = api_album + "/" + recentlyCreatedAlbumID
+@app.route("/album/<title>/<id>")
+def album_view(title, id):
+    reqStr = api_album + "/" + id
     getAlbum = requests.get(reqStr, headers={'token': request.cookies.get('token')})
     jsonDict = json.loads(getAlbum.text)
 
@@ -248,7 +258,7 @@ def album_view(title):
         flash(jsonDict['message'])
         pictureArr = []
         pictureUrlArr = []
-    return render_template('albumView.html', pictureArr=pictureArr, pictureUrlArr=pictureUrlArr, title=jsonDict['title'])
+    return render_template('albumView.html', pictureArr=pictureArr, pictureUrlArr=pictureUrlArr, title=title)
 
 
 @app.route("/stretch/albumEdit")

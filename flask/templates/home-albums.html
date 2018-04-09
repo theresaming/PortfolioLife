@@ -41,7 +41,17 @@
             </div>
         </div>
     </div>
-    Waiting for endpoint to be created!
+    <div class = "container">
+        <div class = "row" style="margin-top: 2em">
+            <ul>
+                {% for albumTitle, albumID in albumData %}
+                    <a href= "{{ url_for("album_view", title=albumTitle, id=albumID) }}">
+                        <li>{{ albumTitle }}</li>
+                    </a>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 
 {% endif %}
 {% endblock %}
