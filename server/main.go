@@ -60,6 +60,9 @@ func init() {
 
 	config.S3Key = os.Getenv("S3_KEY")
 	config.S3Secret = os.Getenv("S3_SECRET")
+	if os.Getenv("DEBUG") == "true" {
+		verboseDatabase = true
+	}
 
 	l = log.New(os.Stderr, "[main]: ", log.LstdFlags|log.Lshortfile)
 }

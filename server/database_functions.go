@@ -343,6 +343,94 @@ func searchWithTag(u *User, term string, front, back, refresh bool) (pictures []
 	return getPictures(u, pictureMasks, refresh)
 }
 
+/*********
+*		 *
+* Albums *
+*		 *
+*********/
+
+// Precondition: album only has valid pictures for this user
+func saveAlbum(album *Album) error {
+	db, err := openConnection()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	values := make([]string, len(album.Pictures))
+	for i, pic := range album.Pictures {
+		values[i] = fmt.Sprintf("('%s', '%s')", album.Mask, pic.Mask)
+	}
+	db.Save(album)
+	return db.Error
+	//sql := fmt.Sprintf("INSERT INTO `album_has_pictures` (`album_mask`,`picture_mask`) VALUES %s", strings.Join(values, ", "))
+	//return db.Exec(sql).Error
+}
+
+func createAlbum(album *Album, pictures []Picture) error {
+	db, err := openConnection()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	if err := db.Create(album).Error; err != nil {
+		return err
+	}
+	return db.Model(album).Association("Pictures").Append(pictures).Error
+}
+
+func getAlbum(user *User, albumID string) (*Album, error) {
+	db, err := openConnection()
+	if err != nil {
+		panic(err)
+	}
+	var (
+		album Album
+	)
+	defer db.Close()
+
+	if err := db.Preload("Pictures").Find(&album, "mask = ?", albumID).Error; err != nil {
+		return nil, err
+	}
+
+	for _, pic := range album.Pictures {
+		getPicture(user, pic.Mask, true) // TODO: better way to just refresh the URL
+	}
+
+	return &album, nil
+}
+
+func deleteAlbum(album *Album) error {
+	if album == nil {
+		return fmt.Errorf("nil album provided")
+	}
+	db, err := openConnection()
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+	// Check the primary key!
+	if len(album.Mask) == 0 {
+		return fmt.Errorf("no primary key in provided album to delete")
+	}
+	err = db.Model(album).Association("Pictures").Clear().Error
+	if err != nil {
+		return err
+	}
+	return db.Delete(album).Error
+}
+
+func getAllAlbums(user *User) ([]Album, error) {
+	db, err := openConnection()
+	if err != nil {
+		panic(err)
+	}
+	var (
+		albums []Album
+	)
+	err = db.Model(user).Related(&albums, "Albums").Error
+	return albums, err
+}
+
 /****************
 *				*
 * Miscellaneous *
