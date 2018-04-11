@@ -29,18 +29,16 @@
     </div>
 </div>
 
-<center>
-<input type="text" value="" placeholder= "" data-role="tagsinput" />
-</center>
+<input type="text" value="" id="tagger" placeholder= "" data-role="tagsinput" />
 
 <span id="result"></span>
-<div class = "container">
+<!-- <div class = "container">
     <div class = "row">
-        <div class="twelve columns">
-            <a class="button" id="save-tags" href="#">Submit Tags</a>
-        </div>
+        <div class="twelve columns"> -->
+            <div class="button" id="save-tags" >Submit Tags</a>
+        <!-- </div>
     </div>
-</div>
+</div> -->
 {% endif %}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js">></script>
@@ -73,12 +71,14 @@
             contentType: 'application/json;charset=UTF-8',
             type: 'POST',
             success: function(response) {
+                $('#your-dialog').dialog('destroy').remove();
                 console.log(response);
             },
             error: function(error) {
                 console.log(error);
             }
         });
+        return false;
 
     }
 </script>
