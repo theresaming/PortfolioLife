@@ -144,7 +144,7 @@ def load_delete():
 @app.route("/image/<image_id>", methods=['GET'])
 def view_image(image_id):
     # print image_id
-    req = requests.get(api_photo_view + image_id, headers={'token': request.cookies.get('token')})
+    req = requests.get(api_photo_view + "/" + image_id, headers={'token': request.cookies.get('token')})
     jsonDict = json.loads(req.text)
     if jsonDict['success']:
         image_url = jsonDict['url']
@@ -156,7 +156,7 @@ def view_image(image_id):
 
 @app.route("/delete/<image_id>")
 def delete_image(image_id):
-    req = requests.delete(api_photo_view + image_id, headers={'token': request.cookies.get('token')})
+    req = requests.delete(api_photo_view + "/" + image_id, headers={'token': request.cookies.get('token')})
     jsonDict = json.loads(req.text)
     if jsonDict['success']:
         return load_home()
@@ -170,15 +170,14 @@ def get_post_javascript_data(image_id):
         jsdata = jsdata.split(",")
         imageurl = jsdata[0]
         imageid = jsdata[1]
-        print jsdata
         data = {
             "tags": jsdata[2:]
         }
+        jsonStr = json.dumps(data)
 
-        print "jsdata[2:]", jsdata[2:]
-        print "jsdata[2:][0]", jsdata[2:][0]
         req = requests.post(api_photo_view + "/" + imageid + "/tags", headers={'token': request.cookies.get('token')},
-            data={'tags': [jsdata[2:]]})
+            data=jsonStr)
+        print (api_photo_view + "/" + imageid + "/tags")
         print request.cookies.get('token')
         jsonDict = json.loads(req.text)
         print jsonDict
