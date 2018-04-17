@@ -25,17 +25,23 @@
             <div class = "row">
                 <div class = "four columns">
                     <div class="upload">
-                        <a href="{{ url_for('load_upload') }}">Upload Photos</a>
+                        <a href="{{ url_for('load_upload') }}">
+                                <button type="button" id="uploadPic-button" style="padding: 0 10px;">Upload Photos</button>
+                            </a>
                     </div>
                 </div>
                 <div class = "four columns">
                     <div class="delete-photo">
-                        <a href="{{ url_for('load_delete') }}">Delete Photos</a>
+                        <a href="{{ url_for('load_delete') }}">
+                                <button type="button" id="delete-button" style="padding: 0 10px; color:#cc1e00;">Delete Photos</button>
+                            </a>
                     </div>
                 </div>
                 <div class = "four columns">
                     <div class="add-album">
-                        <a href="{{ url_for('load_create_album') }}">Add New Album</a>
+                        <a href="{{ url_for('load_create_album') }}">
+                                <button type="button" id="uploadAlb-button" style="padding: 0 10px;">Add New Album</button>
+                        </a>
                     </div>
                 </div>
             </div>
