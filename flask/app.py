@@ -185,6 +185,10 @@ def delete_image(image_id):
     if jsonDict['success']:
         return load_home()
 
+@app.route("/home")
+def like_image(image_id):
+    return load_home()
+
 @app.route('/image/<image_id>/tagged', methods = ['POST', 'GET'])
 def get_post_javascript_data(image_id):
     if request.method == "POST":

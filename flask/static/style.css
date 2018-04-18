@@ -229,6 +229,18 @@ ul li.selected {
     transition: .3s ease-in-out;
 }
 
+.like {
+    position: relative;
+    top: -6em;
+    left: -11em;
+    color: #424242;
+}
+
+.like:hover {
+    color: #ffffff;
+    transition: .3s ease-in-out;
+}
+
 @media (min-width: 400px) {
     .thumbnail {
         position: relative;
