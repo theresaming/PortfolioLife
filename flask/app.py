@@ -170,9 +170,7 @@ def view_image(image_id):
     jsonDict = json.loads(req.text)
     if jsonDict['success']:
         image_url = jsonDict['url']
-        # wordlist = json.loads(request.args.get('wordlist'))
-        # do some stuff
-        # print(jsonify(result=wordlist))
+
         try:
             return render_template("viewImage.html", imageID=image_id, imageURL = image_url)
         except Exception, e:
@@ -185,6 +183,7 @@ def delete_image(image_id):
     if jsonDict['success']:
         return load_home()
 
+# this adds the tags
 @app.route("/home")
 def like_image(image_id):
     return load_home()
@@ -195,9 +194,29 @@ def get_post_javascript_data(image_id):
         jsdata = request.data
         jsdata = jsdata[1:len(jsdata) - 1]
         jsdata = jsdata.split(",")
+        imageurl = jsdata[0]
+        imageid = jsdata[1]
         print jsdata
-        # return render_template("viewImage.html", imageID=jsdata[1], imageURL=jsdata[0], tags=jsdata[1:])
-        return view_image(image_id)
+        data = {
+            "tags": jsdata[2:]
+        }
+
+        print "jsdata[2:]", jsdata[2:]
+        print "jsdata[2:][0]", jsdata[2:][0]
+        req = requests.post(api_photo_view + "/" + imageid + "/tags", headers={'token': request.cookies.get('token')},
+            data={'tags': [jsdata[2:]]})
+        print request.cookies.get('token')
+        jsonDict = json.loads(req.text)
+        print jsonDict
+        return render_template("viewImage.html", imageID=jsdata[1], imageURL=jsdata[0], tags=jsdata[1:])
+
+        # jsonDict = json.loads(req.text)
+        # if jsonDict['success']:
+        #     imageURL = jsonDict['url']
+        #     try:
+        #         return render_template("viewImage.html", imageID=image_id, imageURL = image_url)
+        #     except Exception, e:
+        #     	return(str(e))
 
 
 @app.route("/create-album")
