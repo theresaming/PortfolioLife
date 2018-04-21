@@ -91,6 +91,55 @@ func TestGetPictures(t *testing.T) {
 	fmt.Println(pictures)
 }
 
+func TestInsertAlbum(t *testing.T) {
+	testUser := &User{ID: 3}
+
+	p1, _ := getPicture(testUser, "66mB0HLm-QuNH7o2xip_QVx04F5_OvLA", false)
+	p2, _ := getPicture(testUser, "CNO9tTq4I7H0S-fLBF6wmlE6MeQv6VxP", false)
+	album := &Album{
+		UserID: testUser.ID,
+		Title:  "Test Title",
+		Mask:   generateRandomString(32),
+	}
+	err := createAlbum(album, []Picture{*p1, *p2})
+	if err != nil {
+		panic(err)
+	}
+}
+
+func TestGetAlbum(t *testing.T) {
+	albumID := "lCbmAr3xH1PrxYBoKTKHDc62qYVSzEed"
+	album, _ := getAlbum(&User{ID: 3}, albumID)
+	fmt.Printf("\n\n\n%v\n\n", album.Pictures)
+}
+
+func TestGetNonExistantAlbum(t *testing.T) {
+	badID := "badID"
+	album, err := getAlbum(&User{ID: 3}, badID)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(album)
+}
+
+func TestDeleteAlbum(t *testing.T) {
+	albumID := "6B5GFHaXQBRP26wXXcQosNwzGeiHR7SB"
+	album, err := getAlbum(&User{ID: 3}, albumID)
+	if err != nil {
+		panic(err)
+	}
+	if err = deleteAlbum(album); err != nil {
+		panic(err)
+	}
+}
+
+func TestGetAllAlbums(t *testing.T) {
+	albums, _ := getAllAlbums(&User{ID: 3})
+	for _, album := range albums {
+		fmt.Println(album.Title)
+	}
+}
+
 func init() {
 	verboseDatabase = true
 }

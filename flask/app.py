@@ -26,9 +26,9 @@ def login():
 def do_admin_login():
     if request.method == 'POST':
         email = request.form['email']
-        print email
+        # print email
         password = request.form['password']
-        print password
+        # print password
         data = {
             "email": email,
             "password": password
@@ -110,6 +110,26 @@ def process_audio():
     return render_template('process-audio.html')
 
 
+@app.route("/albums")
+def load_home_albums():
+    if session.get('logged_in'):
+        token = request.cookies.get('token')
+
+        # Get photos from API
+        getAlbums = requests.get(api_album, headers={'token': token})
+        jsonDict = json.loads(getAlbums.text)
+
+        if jsonDict['success']:
+            albumIdTitle = [(a['title'], a['albumID']) for a in jsonDict['albums']]
+        else:
+            flash(jsonDict['message'])
+            albumIdTitle = []
+        print albumIdTitle
+        return render_template('home-albums.html', albumData=albumIdTitle)
+    else:
+        return login()
+
+
 @app.route("/upload")
 def load_upload():
     return render_template('uploadPhotos.html')
@@ -150,14 +170,12 @@ def load_delete():
 @app.route("/image")
 @app.route("/image/<image_id>", methods=['GET'])
 def view_image(image_id):
-    print image_id
+    # print image_id
     req = requests.get(api_photo_view + image_id, headers={'token': request.cookies.get('token')})
     jsonDict = json.loads(req.text)
     if jsonDict['success']:
         image_url = jsonDict['url']
-        # wordlist = json.loads(request.args.get('wordlist'))
-        # do some stuff
-        # print(jsonify(result=wordlist))
+
         try:
             return render_template("viewImage.html", imageID=image_id, imageURL = image_url)
         except Exception, e:
@@ -169,6 +187,129 @@ def delete_image(image_id):
     jsonDict = json.loads(req.text)
     if jsonDict['success']:
         return load_home()
+
+# this adds the tags
+@app.route("/home")
+def like_image(image_id):
+    return load_home()
+
+@app.route('/image/<image_id>/tagged', methods = ['POST', 'GET'])
+def get_post_javascript_data(image_id):
+    if request.method == "POST":
+        jsdata = request.data
+        jsdata = jsdata[1:len(jsdata) - 1]
+        jsdata = jsdata.split(",")
+        imageurl = jsdata[0]
+        imageid = jsdata[1]
+        print jsdata
+        data = {
+            "tags": jsdata[2:]
+        }
+
+        print "jsdata[2:]", jsdata[2:]
+        print "jsdata[2:][0]", jsdata[2:][0]
+        req = requests.post(api_photo_view + "/" + imageid + "/tags", headers={'token': request.cookies.get('token')},
+            data={'tags': [jsdata[2:]]})
+        print request.cookies.get('token')
+        jsonDict = json.loads(req.text)
+        print jsonDict
+        return render_template("viewImage.html", imageID=jsdata[1], imageURL=jsdata[0], tags=jsdata[1:])
+
+        # jsonDict = json.loads(req.text)
+        # if jsonDict['success']:
+        #     imageURL = jsonDict['url']
+        #     try:
+        #         return render_template("viewImage.html", imageID=image_id, imageURL = image_url)
+        #     except Exception, e:
+        #     	return(str(e))
+
+
+@app.route("/create-album")
+def load_create_album():
+    if session.get('logged_in'):
+        token = request.cookies.get('token')
+
+        # Get photos from API
+        getPhotos = requests.get(api_get_photos, headers={'token': token})
+        jsonDict = json.loads(getPhotos.text)
+
+        # Add photos to array
+        if jsonDict['success']:
+            pictureArr = [(picture['url'], picture['pictureID']) for picture in jsonDict['pictures']]
+            pictureUrlArr = [picture['url'] for picture in jsonDict['pictures']]
+            pictureIDArr = [picture['pictureID'] for picture in jsonDict['pictures']]
+        else:
+            flash(jsonDict['message'])
+            pictureUrlArr = []
+        return render_template('addAlbum.html', pictureArr=pictureArr, pictureUrlArr=pictureUrlArr, pictureIDArr=pictureIDArr)
+    else:
+        return login()
+
+
+@app.route("/submit-album", methods=["POST"])
+def submit_album():
+    if request.method == "POST":
+        data = request.form.to_dict()
+        pictureIDs = []
+        title = "My New Album"
+        for key, value in data.items():
+            if key == 'title':
+                title = value
+            else:
+                pictureIDs.append(key)
+
+        asDict = {'title': title,
+                  'pictureIDs': pictureIDs}
+        asJSON = json.dumps(asDict)
+        req = requests.post(api_album_create,
+                            headers={'token': request.cookies.get('token')},
+                            data=asJSON)
+        jsonDict = json.loads(req.text)
+        if jsonDict['success']:
+            return render_template('albumCreated.html', title=jsonDict['title'], albumId=jsonDict['albumID'])
+        else:
+            return str(req.status_code) + ': ' + jsonDict['message']
+    return "Something went wrong!"
+
+
+@app.route("/album/<title>/<albumId>")
+def album_view(title, albumId):
+    reqStr = api_album + "/" + albumId
+    getAlbum = requests.get(reqStr, headers={'token': request.cookies.get('token')})
+    jsonDict = json.loads(getAlbum.text)
+
+    # Add photos to array
+    if jsonDict['success']:
+        pictureArr = [(picture['url'], picture['pictureID']) for picture in jsonDict['pictures']]
+        pictureUrlArr = [picture['url'] for picture in jsonDict['pictures']]
+    else:
+        flash(jsonDict['message'])
+        pictureArr = []
+        pictureUrlArr = []
+    return render_template('albumView.html', pictureArr=pictureArr, pictureUrlArr=pictureUrlArr, title=title, albumId=albumId)
+
+
+@app.route("/stretch/albumEdit")
+def edit_album():
+    return render_template('editAlbum.html')
+
+
+@app.route("/album/delete/<albumId>")
+def delete_album(albumId):
+    reqStr = api_album + "/" + albumId
+    delAlbum = requests.delete(reqStr, headers={'token': request.cookies.get('token')})
+    jsonDict = json.loads(delAlbum.text)
+
+    if jsonDict['success']:
+        flash("Album deleted!")
+    else:
+        flash(jsonDict['message'])
+    return load_home_albums()
+
+
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template('404.html'), 404
 
 
 if __name__ == "__main__":

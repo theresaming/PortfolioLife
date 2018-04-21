@@ -67,7 +67,7 @@ ul {
 
 .spacer {
     width: 100%;
-    height: 66px;
+    height: 4.1em;
 }
 
 .login-screen {
@@ -147,6 +147,12 @@ html {
     transition: transform 0.3s ease-in-out;
 }
 
+.thumbnail:hover {
+    opacity: 0.5;
+    filter: alpha(opacity=100); /* For IE8 and earlier */
+    transition: .3s ease-in-out;
+}
+
 .venobox .thumbnail img {
     position:absolute;
     margin: auto;
@@ -172,8 +178,6 @@ html {
     display: none;
     padding: 2rem;
 }
-
-
 
 .thumbnail .image-tags {
     position: relative;
@@ -222,6 +226,18 @@ ul li.selected {
 }
 
 .delete:hover {
+    color: #ffffff;
+    transition: .3s ease-in-out;
+}
+
+.like {
+    position: relative;
+    top: -6em;
+    left: -11em;
+    color: #424242;
+}
+
+.like:hover {
     color: #ffffff;
     transition: .3s ease-in-out;
 }
@@ -280,4 +296,53 @@ ul li.selected {
     width: 31%;
     height: 4000%;
     visibility: hidden;
+}
+#back-button, #edit-button, #delete-button {
+    margin-top: 15px;
+}
+
+#title-text {
+    width: 100%;
+    padding: 24px 40px;
+    margin: 8px 0;
+    font-size:200%;
+}
+
+.home-bar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.home-bar-item {
+    font-size: 100%;
+    font-variant: small-caps;
+    color: #4C5C61;
+}
+
+a.home-link.active {
+    color: #0A92BF;
+    font-weight: 900;
+}
+
+a.home-link {
+    display: block;
+    color: #72848A;
+    font-size: 125%;
+}
+
+a.home-link:hover {
+    color: #1EAEDB;
+}
+
+.home-menu {
+    position: fixed;
+    z-index: 1;
+    top: 4em;
+    left: 0.2em;
+    padding-top: 0.6em;
+    padding-left: 1em;
+    padding-right: 1em;
+    overflow-x: hidden;
+    background-color: #e0e0e0;
 }

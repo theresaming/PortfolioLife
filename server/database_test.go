@@ -101,6 +101,41 @@ func TestDropAllTables(t *testing.T) {
 		Exec("DROP TABLE IF EXISTS picture_shares;")
 }
 
+func TestLol(t *testing.T) {
+	db, err := openConnection()
+	if err != nil {
+		panic(err)
+	}
+	db.LogMode(false)
+	defer db.Close()
+
+	pics, _ := getPictures(&User{ID: 3}, []string{"CNO9tTq4I7H0S-fLBF6wmlE6MeQv6VxP", "66mB0HLm-QuNH7o2xip_QVx04F5_OvLA"}, false)
+
+	// u := &User{
+	// 	ID: 3,
+	// }
+	a := &Album{
+		Mask:   "album_mask",
+		UserID: 3,
+		Title:  "test",
+		// Pictures: picturePtrs,
+	}
+	db.LogMode(true)
+	if err := db.Create(a).Error; err != nil {
+		panic(err)
+	}
+	if err := db.Model(a).Association("Pictures").Append(pics).Error; err != nil {
+		panic(err)
+	}
+	if err := db.Save(a).Error; err != nil {
+		panic(err)
+	}
+	// if err := db.Save(a).Error; err != nil {
+	// 	panic(err)
+	// }
+	// db.Model(&Album{}).Related(&Picture{}, "Pictures")
+}
+
 type testConfig struct {
 	Users    []User    `json:"users"`
 	Pictures []Picture `json:"pictures"`

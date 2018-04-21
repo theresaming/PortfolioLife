@@ -1,10 +1,9 @@
 {% extends "layout.html" %}
-{% block head %}
-<!-- TAGS INPUT -->
-<link href="/static/bootstrap-tagsinput.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css">
-
+{% block title %}
+    PortfolioLife - Edit Image Tags
 {% endblock %}
+
+
 {% block body %}
 
 {% if not session['logged_in'] %}
@@ -30,9 +29,16 @@
     </div>
 </div>
 
-<center>
-<input type="text" value="" data-role="tagsinput" placeholder="Add tags" />
-</center>
+<input type="text" value="" id="tagger" placeholder= "" data-role="tagsinput" />
+
+<span id="result"></span>
+<!-- <div class = "container">
+    <div class = "row">
+        <div class="twelve columns"> -->
+            <div class="button" id="save-tags" >Submit Tags</a>
+        <!-- </div>
+    </div>
+</div> -->
 {% endif %}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js">></script>
@@ -41,16 +47,40 @@
     $('input').tagsinput({
       allowDuplicates: false
     });
-    var list = $("input").tagsinput('items');
-    console.log(list);
 
-    $.getJSON($SCRIPT_ROOT + '/image/', {
-        wordlist = JSON.stringify(list)
-        console.log(wordlist)},
-        function(data) {
-            console.log(data.result)
-            $("#result").text(data.result);
-        })
+    // $.getJSON($SCRIPT_ROOT + '/image/', {
+    //     wordlist = JSON.stringify(list)
+    //     console.log(wordlist)},
+    //     function(data) {
+    //         console.log(data.result)
+    //         $("#result").text(data.result);
+    //     })
+
+    document.getElementById("save-tags").onclick = function() {myFunction()};
+
+    function myFunction() {
+        var imageid = "{{ imageID }},";
+        var imageurl = "{{ imageURL }},";
+        var list = $("input").tagsinput('items');
+        console.log(list[1]);
+        var javascript_data = JSON.stringify(imageurl + imageid + list[1]);
+        console.log(javascript_data);
+        $.ajax({
+            url: '/image/{{ imageID }}/tagged',
+            data: javascript_data,
+            contentType: 'application/json;charset=UTF-8',
+            type: 'POST',
+            success: function(response) {
+                $('#your-dialog').dialog('destroy').remove();
+                console.log(response);
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+        return false;
+
+    }
 </script>
 
 {% endblock %}

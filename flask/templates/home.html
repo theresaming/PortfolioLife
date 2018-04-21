@@ -5,6 +5,16 @@
 {% if not session['logged_in'] %}
     <p>You're not logged in!</p>
 {% else %}
+    <div class="home-menu">
+        <ul class="home-bar">
+          <li class="home-bar-item first"><a class="home-link active" href="{{ url_for("load_home") }}">My Photos</a></li>
+          <li class="home-bar-item second"><a class="home-link" href="{{ url_for("load_home_albums") }}">My Albums</a></li>
+        </ul>
+    </div>
+    <div class="logout">
+        <input type="text" id="link-box" placeholder="Search"/>
+        <input type="button" id="search-button" value="Search" style="background-color: white"/>
+    </div>
     <div class = "container">
         <div class = "home-content">
             <div class = "row">
@@ -13,14 +23,25 @@
                 </div>
             </div>
             <div class = "row">
-                <div class = "six columns">
+                <div class = "four columns">
                     <div class="upload">
-                        <a href="{{ url_for('load_upload') }}">Upload Photos</a>
+                        <a href="{{ url_for('load_upload') }}">
+                            <button type="button" id="uploadPic-button" style="padding: 0 10px;">Upload Photos</button>
+                        </a>
                     </div>
                 </div>
-                <div class = "six columns">
+                <div class = "four columns">
                     <div class="delete-photo">
-                        <a href="{{ url_for('load_delete') }}">Delete Photos</a>
+                        <a href="{{ url_for('load_delete') }}">
+                            <button type="button" id="delete-button" style="padding: 0 10px; color:#cc1e00;">Delete Photos</button>
+                        </a>
+                    </div>
+                </div>
+                <div class = "four columns">
+                    <div class="add-album">
+                        <a href="{{ url_for('load_create_album') }}">
+                                <button type="button" id="uploadAlb-button" style="padding: 0 10px;">Add New Album</button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -37,6 +58,7 @@
                                     </div>
                                 </div>
                                 <a class="edit" href = "{{ url_for('view_image', image_id = imageID)}}"><i class="fas fa-tag fa-2x"></i></a>
+                                <a class="like" href = "{{ url_for('like_image', image_id = imageID)}}"><i class="fas fa-heart fa-2x"></i></a>
                                 <a class="delete" href = "{{ url_for('delete_image', image_id = imageID)}}"><i class = "fas fa-trash-alt fa-2x"></i></a>
                             </a>
                         {% endfor %}
