@@ -27,7 +27,7 @@ ul {
     top: 0;
     left: 0;
     width: 100%;
-    height: 4em;
+    height: 3em;
     background-color: #4A4A4A;
     margin-bottom: 56px;
     padding-bottom: 2px;
@@ -36,7 +36,7 @@ ul {
 .title-text {
     position: absolute;
     z-index: 2147000000;
-    top: 8px;
+    top: 6px;
     left: 16px;
     font-size: 32px;
     text-align: center;
@@ -96,10 +96,11 @@ html {
 
 .footer-bar {
     position: fixed;
+    z-index: 1500;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 3em;
+    height: .1em;
     margin-top: 56px;
     padding-top: 2px;
 }
@@ -255,6 +256,53 @@ ul li.selected {
     text-align: center;
 }
 
+#voice-button {
+    z-index: 1500;
+
+    background-color: #3d004d;
+    border: none;
+    color: white;
+    text-align: center;
+    font-size: 100%;
+    font-family: 'Quicksand', sans-serif;
+    position: absolute;
+    bottom: 4px;
+    left: 16px;
+    width: 30%;
+    height: 1500%;
+
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+}
+
+#results-viewer {
+    position: absolute;
+    bottom: 100px;
+    left: 16px;
+}
+
+#voice-button:hover {
+    background-color: #660080;
+    color: white;
+    font-size: 1.1em;
+}
+
+#voice-button:focus {
+    color: white;
+}
+
+#voice-button.recording {
+    background-color: red;
+}
+
+.voice-vis {
+    position: absolute;
+    bottom: 75px;
+    left: 17px;
+    width: 31%;
+    height: 4000%;
+    visibility: hidden;
+}
 #back-button, #edit-button, #delete-button {
     margin-top: 15px;
 }

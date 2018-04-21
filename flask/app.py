@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request, session, json, redirect, make_response
+from flask import Flask, flash, render_template, request, session, json, redirect, make_response, url_for
 import requests
 import os
 from werkzeug import secure_filename
@@ -12,8 +12,6 @@ app.secret_key = os.urandom(12)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = MYSQL_URL
 app.config['OAUTH_CREDENTIALS'] = OAUTH_CREDENTIALS
-
-recentlyCreatedAlbumID = ""
 
 
 @app.route('/')
@@ -100,9 +98,25 @@ def load_home():
         else:
             flash(jsonDict['message'])
             pictureUrlArr = []
-        return render_template('home.html', pictureArr = pictureArr, pictureUrlArr=pictureUrlArr, pictureIDArr=pictureIDArr)
+
+        return render_template('home.html', pictureArr=pictureArr, pictureUrlArr=pictureUrlArr, pictureIDArr=pictureIDArr)
     else:
         return login()
+
+
+@app.route("/process-audio", methods=['POST'])
+def process_audio():
+    if request.method == 'POST':
+        transcript = request.form['transcript'];
+        if "upload" in transcript:
+            return redirect(url_for('load_upload'))
+        elif "album" in transcript:
+            return redirect(url_for('load_home_albums'))
+        elif "home" in transcript or "main" in transcript:
+            return redirect(url_for('load_home'))
+        else:
+            return render_template('process-audio.html', transcript=transcript)
+    return render_template(not_found_error(404))
 
 
 @app.route("/albums")
