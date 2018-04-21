@@ -76,16 +76,14 @@
 <!--<footer>-->
 <div class="footer-bar">
     {% if session.get('logged_in') %}
-        <script src="/static/scripts/recorder.js"></script>
-        <script src="/static/scripts/voice-control.js"></script>
         <div class="footer-voice">
-            <canvas id="analyzer" class="voice-vis"></canvas>
-                <form action="{{ url_for('process_audio') }}" method="post" id="audioForm">
-{#                    <input id="save" type="hidden" name="url_field" value="#">#}
-                    <a id="save-link" href="#">
-                        <button onmousedown="toggleRecording(this);" onmouseup="activateSubmit();" type="button" id="voice-button">How can we help you?</button>
-                    </a>
-                </form>
+            <text id="results-viewer"></text>
+            <div id="results">
+              <span class="final" id="final_span"></span> <span class="interim" id=
+              "interim_span"></span>
+            </div>
+            <script src="/static/scripts/voice-control.js"></script>
+            <button onclick="startButton(event);" type="button" id="voice-button">How can we help you?</button>
         </div>
     {% endif %}
 

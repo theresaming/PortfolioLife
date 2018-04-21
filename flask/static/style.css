@@ -275,6 +275,12 @@ ul li.selected {
     transition-duration: 0.4s;
 }
 
+#results-viewer {
+    position: absolute;
+    bottom: 100px;
+    left: 16px;
+}
+
 #voice-button:hover {
     background-color: #660080;
     color: white;
