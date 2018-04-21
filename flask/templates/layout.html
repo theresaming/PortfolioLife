@@ -73,17 +73,26 @@
 {% block body %}
 {% endblock %}
 
+<div class="spacer">
+    &nbsp;
+</div>
+<div class="spacer">
+    &nbsp;
+</div>
 <!--<footer>-->
 <div class="footer-bar">
     {% if session.get('logged_in') %}
         <div class="footer-voice">
-            <text id="results-viewer"></text>
-            <div id="results">
-              <span class="final" id="final_span"></span> <span class="interim" id=
-              "interim_span"></span>
-            </div>
-            <script src="/static/scripts/voice-control.js"></script>
-            <button onclick="startButton(event);" type="button" id="voice-button">How can we help you?</button>
+            <form action="{{ url_for('process_audio') }}" method="post" id="audioForm">
+                <text id="results-viewer"></text>
+                <input type="hidden" value="" name="transcript" id="transcript" />
+                <div id="results">
+                  <span class="final" id="final_span"></span> <span class="interim" id=
+                  "interim_span"></span>
+                </div>
+                <script src="/static/scripts/voice-control.js"></script>
+                <button onclick="startButton(event);" type="button" id="voice-button">How can we help you?</button>
+            </form>
         </div>
     {% endif %}
 

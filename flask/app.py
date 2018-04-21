@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request, session, json, redirect, make_response
+from flask import Flask, flash, render_template, request, session, json, redirect, make_response, url_for
 import requests
 import os
 from werkzeug import secure_filename
@@ -106,8 +106,17 @@ def load_home():
 
 @app.route("/process-audio", methods=['POST'])
 def process_audio():
-
-    return render_template('process-audio.html')
+    if request.method == 'POST':
+        transcript = request.form['transcript'];
+        if "upload" in transcript:
+            return redirect(url_for('load_upload'))
+        elif "album" in transcript:
+            return redirect(url_for('load_home_albums'))
+        elif "home" in transcript or "main" in transcript:
+            return redirect(url_for('load_home'))
+        else:
+            return render_template('process-audio.html', transcript=transcript)
+    return render_template(not_found_error(404))
 
 
 @app.route("/albums")

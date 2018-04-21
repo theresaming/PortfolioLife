@@ -67,6 +67,10 @@ if (!('webkitSpeechRecognition' in window)) {
 function startButton(event) {
   if (recognizing) {
     recognition.stop();
+    document.getElementById("voice-button").textContent="Processing your command...";
+    document.getElementById("voice-button").classList.remove("recording");
+    document.getElementById("transcript").setAttribute('value', document.getElementById("final_span").textContent);
+    document.getElementById("audioForm").submit();
     return;
   }
   final_transcript = '';
@@ -76,5 +80,7 @@ function startButton(event) {
   final_span.innerHTML = '';
   interim_span.innerHTML = '';
   start_timestamp = event.timeStamp;
+  document.getElementById("voice-button").textContent="When finished, click me!";
+  document.getElementById("voice-button").classList.add("recording");
   document.getElementById("results-viewer").textContent="Listening...";
 }
