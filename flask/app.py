@@ -316,6 +316,10 @@ def delete_album(albumId):
     return load_home_albums()
 
 
+@app.route("/share/")
+def share_photo():
+    return render_template("share.html")
+
 @app.errorhandler(404)
 def not_found_error(error):
     return render_template('404.html'), 404

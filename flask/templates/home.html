@@ -58,7 +58,7 @@
                                     </div>
                                 </div>
                                 <a class="edit" href = "{{ url_for('view_image', image_id = imageID)}}"><i class="fas fa-tag fa-2x"></i></a>
-                                <a class="like" href = "{{ url_for('like_image', image_id = imageID)}}"><i class="fas fa-heart fa-2x"></i></a>
+                                <!-- <a class="like" href = "{{ url_for('like_image', image_id = imageID)}}"><i class="fas fa-heart fa-2x"></i></a> -->
                                 <a class="delete" href = "{{ url_for('delete_image', image_id = imageID)}}"><i class = "fas fa-trash-alt fa-2x"></i></a>
                             </a>
                         {% endfor %}

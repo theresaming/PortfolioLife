@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block title %}
+    PortfolioLife - Edit Image Tags
+{% endblock %}
+
+
+{% block body %}
+
+{% if not session['logged_in'] %}
+    <p>You're not logged in!</p>
+{% else %}
+
+<p>
+    The link for sharing is: _______
+</p>
+{% endif %}
+
+{% endblock %}
