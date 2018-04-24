@@ -66,6 +66,7 @@ This guide assumes a basic competence with a command line tool like Terminal. Fo
 
 - **Register** for an account and **login** to the service. Users who have not registered are unable to use the service.
 - **View** photos and albums on an account by using the sidebar in the top left corner of the homepage.
+- **Enlarge** a photo for viewing by clicking on the photo on the homepage.
 - **Upload** photos to an account, by clicking on the "Upload Photos" button on the homepage.
 - **Delete** photos from an account, by clicking on the trash can button over a photo on the homepage. Deleted photos cannot be recovered!
 - **Create** albums on an account, by clicking on the "Create an Album" button on the homepage. Albums cannot be created without a title and must contain at least one picture.
@@ -84,4 +85,6 @@ This guide assumes a basic competence with a command line tool like Terminal. Fo
 - Tag searching was not implemented.
 - Album editing was not implemented.
 - Mobile phone support was not implemented.
+- Liking a photo was not implemented.
+- Commenting on a photo was not implemented.
 - Voice control for photo deleting, photo tagging, search, album creation, and album deletion were not implemented.
