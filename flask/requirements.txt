@@ -13,7 +13,7 @@ oauth2==1.9.0.post1
 pathtools==0.1.2
 requests==2.18.4
 SQLAlchemy==1.1.15
-urllib3==1.22
+urllib3==1.26.5
 virtualenv==15.1.0
 Werkzeug==0.14.1
 WTForms==2.1
